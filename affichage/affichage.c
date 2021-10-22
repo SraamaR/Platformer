@@ -1,6 +1,6 @@
 #include <ncurses.h>
 
-#include "gameplay/joueur.h"
+#include "../gameplay/joueur.h"
 
 void affichage(joueur j)
 {
