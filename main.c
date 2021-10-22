@@ -13,7 +13,7 @@ int main()
 
     while (enCours) 
     {
-        affichage(j)
+        affichage(j);
 
         getch();
 
