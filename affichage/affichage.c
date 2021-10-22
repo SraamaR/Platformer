@@ -2,11 +2,6 @@
 
 #include "../gameplay/joueur.h"
 
-void affichage(joueur j)
-{
-    creerMenu();
-}
-
 void creerMenu()
 {
     initscr();
@@ -16,4 +11,9 @@ void creerMenu()
     getmaxyx(stdscr, yMax, xMax);
 
     mvprintw(yMax /2, xMax / 2 - 5,"Platformer");
+}
+
+void affichage(joueur j)
+{
+    creerMenu();
 }
