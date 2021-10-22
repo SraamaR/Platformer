@@ -1,24 +1,26 @@
 #include <ncurses.h>
-#include "affichage/affichage.h"
 #include <stdbool.h>
+
+#include "affichage/affichage.h"
+#include "gameplay/gameplay.h"
 
 int main() 
 {
     bool enCours = true;
 
-    while (enCours) {
+    //Init joueur
+    joueur j = initJoueur();
 
-        creerMenu();
+    while (enCours) 
+    {
+        affichage(j)
 
         getch();
 
         enCours = false;
-    
     }
-        
-
+    
     endwin();
 
     return 0;
-
 }

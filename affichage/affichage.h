@@ -1,7 +1,7 @@
-#ifndef MENU_H
+#ifndef AFFICHAGE_H
 
-#define MENU_H
+#define AFFICHAGE_H
 
-void creerMenu();
+void affichage(joueur j);
 
 #endif
