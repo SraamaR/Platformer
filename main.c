@@ -4,7 +4,7 @@
 
 #include "affichage/affichage.h"
 #include "gameplay/gameplay.h"
-#include "gameplay/map.h"
+#include "map/map.h"
 
 int main() 
 {

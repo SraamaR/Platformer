@@ -17,7 +17,7 @@ const int ligneMaxMemoire = 50; //Nombre de ligne maximum en mémoire
 
 char** texteConsole = NULL; //Le texte à afficher
 
-void afficherMessageConsole(const char* str)
+void afficherMessageConsole(char* str)
 {
     if(consoleActive == false)
     {
