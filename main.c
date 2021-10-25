@@ -3,8 +3,10 @@
 #include <stdlib.h>
 
 #include "affichage/affichage.h"
+#include "affichage/console.h"
 #include "gameplay/gameplay.h"
 #include "map/map.h"
+
 
 int main() 
 {
@@ -15,7 +17,7 @@ int main()
 
     //Init affichage
     initscr();
-    if(activerConsole)
+    if (activerConsole)
     {
         initConsole();
     }
@@ -37,11 +39,14 @@ int main()
     }
     
     //Arret du jeu
-    if(map != NULL)
+
+    if (map != NULL)
     {
         free(map);
     }
-    libererMemoireAffichage();
+
+    libererMemoireConsole();
+
     endwin();
     return 0;
 }

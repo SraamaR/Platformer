@@ -1,6 +1,9 @@
-#include "joueur.h"
 #include <stdlib.h>
+
+#include "joueur.h"
 #include "../affichage/affichage.h"
+#include "../affichage/console.h"
+
 
 //Initialise un joueur aux positions (0, 0)
 joueur initJoueur()

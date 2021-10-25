@@ -2,15 +2,19 @@
 #include <stdio.h>
 
 #include "../affichage/affichage.h"
+#include "../affichage/console.h"
 
 void initTableau(char* map, int x, int y)
 {
+
     //Réservation pour le stockage de la map en mémoire
     map = malloc((x * y) * sizeof(char));
+
 }
 
 void chargementMap(char* map)
 {
+
     FILE* fichierMap = NULL;
     fichierMap = fopen("map.txt", "r");
 
@@ -30,4 +34,5 @@ void chargementMap(char* map)
 
     //Chargement map
     afficherMessageConsole("Chargement map effectué");
+    
 }
