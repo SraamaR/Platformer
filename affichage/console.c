@@ -2,6 +2,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include "../moteur/frames.h"
+
 // console : permet d'afficher les messages d'erreurs et de deboguer le programme (version developpement)
 
 bool consoleActive = false;
@@ -42,7 +44,7 @@ void afficherMessageConsole(char* str)
     for (int i = 0; i <= nbreLigneAffichage; i++)
     {
 
-        wprintw(console, texteConsole[ligneConsole - nbreLigneAffichage + i]);
+        wprintw(console, "%d : %s", compteurFrame ,texteConsole[ligneConsole - nbreLigneAffichage + i]);
 
         wprintw(console, "\n");
 

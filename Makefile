@@ -1,7 +1,7 @@
-platformer: main.o affichage.o gameplay.o joueur.o map.o console.o
-	gcc main.o affichage.o gameplay.o joueur.o map.o console.o -o platformer -lncurses -Wall
+platformer: main.o affichage.o gameplay.o joueur.o map.o console.o frames.o
+	gcc main.o affichage.o gameplay.o joueur.o map.o console.o frames.o -o platformer -lncurses -Wall
 
-main.o: main.c affichage/affichage.h gameplay/gameplay.h map/map.h affichage/console.h
+main.o: main.c affichage/affichage.h gameplay/gameplay.h map/map.h affichage/console.h moteur/frames.h
 	gcc -c main.c
 
 affichage.o: affichage/affichage.c gameplay/joueur.h affichage/console.h
@@ -21,6 +21,9 @@ console.o: affichage/console.c
 
 map.o: map/map.c affichage/affichage.h affichage/console.h
 	gcc -c map/map.c
+
+frames.o: moteur/frames.c
+	gcc -c moteur/frames.c
 
 clean:
 	rm -f *.o
