@@ -19,17 +19,19 @@ int main()
     bool activerConsole = true;
     char* map = NULL;
 
-    // Initialise le compteur de frames
-    initFrames(TARGET_FPS);
-
     //Initialise l'affichage et la console
 
     initscr();
+    start_color();
+
     if (activerConsole)
     {
         initConsole();
     }
     initAffichage();
+
+    // Initialise le compteur de frames
+    initFrames(TARGET_FPS);
 
     //Initialise la map
     chargementMap(map);
@@ -57,6 +59,7 @@ int main()
         if (input == 27) { // 27 == ESC
             
             enCours = false;
+            afficherMessageConsole("ESC pressée", WARNMSG);
 
         }
 
@@ -75,7 +78,8 @@ int main()
         free(map);
     }
 
-    libererMemoireConsole();
+    nodelay(stdscr, false);
+    getch();
 
     endwin();
     return 0;

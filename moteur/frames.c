@@ -4,6 +4,8 @@ int compteurFrame = 0; // compteur de frames
 int framesParSecondes; // nombre de fps visé
 float ecartFrameMs; // écart temporel entre deux frames
 
+
+// initialise le moteur de frame avec le nombre de fps visé
 void initFrames(int fps)
 {
 
@@ -16,6 +18,7 @@ void initFrames(int fps)
 
 }
 
+// compte la frame suivante
 void frameSuivante()
 {
 

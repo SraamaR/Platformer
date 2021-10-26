@@ -20,7 +20,7 @@ void chargementMap(char* map)
 
     if (fichierMap == NULL)
     {
-        afficherMessageConsole("Le fichier map.txt n'existe pas ou est invalide");
+        afficherMessageConsole("Le fichier map.txt n'existe pas ou est invalide", ERRMSG);
         return;
     }
 
@@ -28,11 +28,11 @@ void chargementMap(char* map)
 
     if(map == NULL)
     {
-        afficherMessageConsole("Erreur d'allocation mémoire");
+        afficherMessageConsole("Erreur d'allocation mémoire", ERRMSG);
         return;
     }
 
     //Chargement map
-    afficherMessageConsole("Chargement map effectué");
+    afficherMessageConsole("Chargement map effectué", INFOMSG);
     
 }

@@ -43,7 +43,7 @@ void initAffichage()
     int xMax = getmaxx(jeu);
     mvwprintw(jeu, 1, xMax / 2 - 5, "Platformer");
 
-    afficherMessageConsole("Initialisation de l'affichage effectuee");
+    afficherMessageConsole("Initialisation de l'affichage effectuee", INFOMSG);
 
     return;
 

@@ -13,7 +13,7 @@ joueur initJoueur()
     res.posx = 0;
     res.posy = 0;
 
-    afficherMessageConsole("Initialisation du joueur effectue");
+    afficherMessageConsole("Initialisation du joueur effectue", INFOMSG);
 
     return res;
 }
