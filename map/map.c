@@ -4,35 +4,38 @@
 #include "../affichage/affichage.h"
 #include "../affichage/console.h"
 
-void initTableau(char* map, int x, int y)
+char* initTableau(int x, int y)
 {
+    char* map = NULL;
 
     //Réservation pour le stockage de la map en mémoire
     map = malloc((x * y) * sizeof(char));
 
+    return map;
 }
 
-void chargementMap(char* map)
+char* chargementMap()
 {
-
     FILE* fichierMap = NULL;
-    fichierMap = fopen("map.txt", "r");
+    char* map = NULL;
+    fichierMap = fopen("map/map.txt", "r");
 
-    if (fichierMap == NULL)
+    if(fichierMap == NULL)
     {
         afficherMessageConsole("Le fichier map.txt n'existe pas ou est invalide", ERRMSG);
-        return;
+        return NULL;
     }
 
-    initTableau(map, 8, 8);
+    map = initTableau(8, 8);
 
     if(map == NULL)
     {
-        afficherMessageConsole("Erreur d'allocation mémoire", ERRMSG);
-        return;
+        afficherMessageConsole("Erreur d'allocation memoire", ERRMSG);
+        return NULL;
     }
 
     //Chargement map
-    afficherMessageConsole("Chargement map effectué", INFOMSG);
-    
+    afficherMessageConsole("Chargement map effectue", INFOMSG);
+
+    return map;
 }

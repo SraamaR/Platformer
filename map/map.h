@@ -3,6 +3,6 @@
 
 char* initMap();
 
-void chargementMap(char* map);
+char* chargementMap();
 
 #endif

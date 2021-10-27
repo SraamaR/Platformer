@@ -8,7 +8,7 @@
 WINDOW *jeu;
 
 
-void affichage(joueur j)
+void affichage(joueur j, char* map)
 {
     int xMax, yMax;
     getmaxyx(jeu, yMax, xMax);
@@ -18,23 +18,18 @@ void affichage(joueur j)
     wrefresh(jeu);
 }
 
-
 // Initialise l'affichage
 void initAffichage()
 {
     //On choisit la bonne taille en fonction de la présence de la console
     if(consoleActive == true)
     {
-
         jeu = subwin(stdscr, LINES - ligneMax - 1, COLS, ligneMax + 1, 0);
-
     }
     
     else
     {
-
         jeu = subwin(stdscr, LINES, COLS, 0, 0);
-
     }
 
     //Contour blanc
@@ -46,5 +41,4 @@ void initAffichage()
     afficherMessageConsole("Initialisation de l'affichage effectuee", INFOMSG);
 
     return;
-
 }

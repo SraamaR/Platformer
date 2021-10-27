@@ -5,7 +5,6 @@
 
 void initAffichage();
 
-void affichage(joueur j);
-
+void affichage(joueur j, char* map);
 
 #endif

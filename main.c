@@ -34,7 +34,7 @@ int main()
     initFrames(TARGET_FPS);
 
     //Initialise la map
-    chargementMap(map);
+    map = chargementMap();
     
     //Initialise un joueur
     joueur j = initJoueur();
@@ -52,7 +52,7 @@ int main()
     {
         start = clock(); // compteur de début
 
-        affichage(j);
+        affichage(j, map);
 
         input = getch();
 
@@ -72,7 +72,6 @@ int main()
     }
     
     //Arret du jeu
-
     if (map != NULL)
     {
         free(map);
