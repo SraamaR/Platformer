@@ -11,13 +11,16 @@
 #include "map/map.h"
 #include "moteur/frames.h"
 
-
 int main() 
 {
     //Declaration variables
     bool enCours = true;
     bool activerConsole = true;
     map instanceMap;
+    
+    //Coordonées du point d'apparition
+    int spawn_x = 0;
+    int spawn_y = 0;
 
     //Initialise l'affichage et la console
     initscr();
@@ -36,7 +39,8 @@ int main()
     instanceMap = chargementMap();
     
     //Initialise un joueur
-    joueur j = initJoueur();
+    posSpawnJoueur(&spawn_x, &spawn_y, instanceMap);
+    joueur j = initJoueur(spawn_x, spawn_y);
 
     // stocke l'entrée utilisateur
     int input;
@@ -49,21 +53,19 @@ int main()
 
     while (enCours) 
     {
-        start = clock(); // compteur de début
+        start = clock();    // compteur de début
 
         affichage(j, instanceMap);
 
         input = getch();
 
-        if (input == 27) { // 27 == ESC
-            
+        if (input == 27)    // 27 == ESC    
+        { 
             enCours = false;
             afficherMessageConsole("ESC pressée", WARNMSG);
-
         }
 
-
-        end = clock(); // compteur de fin
+        end = clock();  // compteur de fin
 
         napms(ecartFrameMs - (float)(start - end) / CLOCKS_PER_SEC); // attends le temps entre deux frames (moins le temps nécessaire au traitement)
 

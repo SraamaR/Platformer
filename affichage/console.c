@@ -10,7 +10,6 @@ const int INFOMSG = 50;
 const int ERRMSG = 51;
 const int WARNMSG = 52;
 
-
 typedef struct messageConsole {
 
     int timeFrame;
@@ -19,10 +18,8 @@ typedef struct messageConsole {
 
 } messageConsole;
 
-
 bool consoleActive = false;
 WINDOW *console;
-
 
 int ligneMax = 0; // Nombre de ligne console
 int ligneConsole = 0; // Ligne actuelle
@@ -30,15 +27,11 @@ const int ligneMaxMemoire = 50; // Nombre de ligne maximum en mémoire
 
 messageConsole messageList[50];
 
-
 void afficherMessageConsole(char* str, int msgType)
 {
-
     if(consoleActive == false)
     {
-
         return;
-
     }
 
     // On nettoie la fenêtre
@@ -49,9 +42,7 @@ void afficherMessageConsole(char* str, int msgType)
 
     if(ligneConsole < ligneMax)
     {
-
         nbreLigneAffichage = ligneConsole;
-
     }
 
     messageList[ligneConsole].msg = str;
@@ -68,20 +59,15 @@ void afficherMessageConsole(char* str, int msgType)
 
         wattroff(console, COLOR_PAIR(messageList[ligneConsole - nbreLigneAffichage + i].messageType));
         wrefresh(console);
-
     }
    
     ligneConsole++;
     
-
     return;
-
 }
-
 
 void initConsole()
 {
-
     ligneMax = LINES / 6;
     console = subwin(stdscr, ligneMax + 1, COLS, 0, 0);
 
@@ -95,6 +81,4 @@ void initConsole()
     afficherMessageConsole("Initialisation de la console effectuee", INFOMSG);
 
     return;
-
 }
-
