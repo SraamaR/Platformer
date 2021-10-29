@@ -17,7 +17,7 @@ int main()
     //Declaration variables
     bool enCours = true;
     bool activerConsole = true;
-    char* map = NULL;
+    map map;
 
     //Initialise l'affichage et la console
 
@@ -72,10 +72,7 @@ int main()
     }
     
     //Arret du jeu
-    if (map != NULL)
-    {
-        free(map);
-    }
+    libererMemoireMap(map);
 
     nodelay(stdscr, false);
     getch();

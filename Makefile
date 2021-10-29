@@ -4,7 +4,7 @@ platformer: main.o affichage.o gameplay.o joueur.o map.o console.o frames.o
 main.o: main.c affichage/affichage.h gameplay/gameplay.h map/map.h affichage/console.h moteur/frames.h
 	gcc -c main.c
 
-affichage.o: affichage/affichage.c gameplay/joueur.h affichage/console.h
+affichage.o: affichage/affichage.c gameplay/joueur.h affichage/console.h map/map.h
 	gcc -c affichage/affichage.c
 
 gameplay.o: gameplay/gameplay.c gameplay/input.h gameplay/joueur.h affichage/affichage.h

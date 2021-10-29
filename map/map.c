@@ -1,41 +1,72 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <ncurses.h>
 
 #include "../affichage/affichage.h"
 #include "../affichage/console.h"
 
-char* initTableau(int x, int y)
+const int LONGUEUR_MAX_MAP = 255;
+
+void libererMemoireMap(map instanceMap)
 {
-    char* map = NULL;
-
-    //Réservation pour le stockage de la map en mémoire
-    map = malloc((x * y) * sizeof(char));
-
-    return map;
+    free(instanceMap.ptr_map);
 }
 
-char* chargementMap()
+char** initTableau(int x, int y)
+{
+    char** ptr_map = NULL;
+
+    ptr_map = malloc(x * sizeof(char*));
+
+    for(int i = 0; i < x; i++)
+    {
+        //Réservation pour chaque colone du tableau
+        ptr_map[i] = malloc(y * sizeof(char));
+
+        if(ptr_map[i] == NULL)
+        {
+            afficherMessageConsole("Erreur d'allocation memoire colone", ERRMSG);
+            //Fuite mémoire : Il faudra free chaque conlone
+            //libererMemoireMap(ptr_map);
+            return NULL;
+        }
+    }
+
+    return ptr_map;
+}
+
+map chargementMap()
 {
     FILE* fichierMap = NULL;
-    char* map = NULL;
+    map instanceMap;
     fichierMap = fopen("map/map.txt", "r");
 
     if(fichierMap == NULL)
     {
         afficherMessageConsole("Le fichier map.txt n'existe pas ou est invalide", ERRMSG);
-        return NULL;
+        fclose(fichierMap);
+        exit(1);
     }
 
-    map = initTableau(8, 8);
+    char ligne[LONGUEUR_MAX_MAP];
+    fgets(ligne, LONGUEUR_MAX_MAP, fichierMap);
 
-    if(map == NULL)
+    int xMax, yMax;
+    getmaxyx(stdscr, yMax, xMax);
+
+    mvprintw(yMax / 2, xMax / 2 - 5, "%sM", ligne);
+
+    instanceMap.ptr_map = initTableau(8, 8);
+    if(instanceMap.ptr_map == NULL)
     {
         afficherMessageConsole("Erreur d'allocation memoire", ERRMSG);
-        return NULL;
+        fclose(fichierMap);
+        exit(1);
     }
 
     //Chargement map
     afficherMessageConsole("Chargement map effectue", INFOMSG);
 
-    return map;
+    fclose(fichierMap);
+    return instanceMap;
 }

@@ -3,12 +3,13 @@
 #include <stdlib.h>
 
 #include "../gameplay/joueur.h"
+#include "../map/map.h"
 #include "./console.h"
 
 WINDOW *jeu;
 
 
-void affichage(joueur j, char* map)
+void affichage(joueur j, map map)
 {
     int xMax, yMax;
     getmaxyx(jeu, yMax, xMax);
