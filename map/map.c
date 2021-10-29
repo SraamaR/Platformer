@@ -38,7 +38,12 @@ char** initTableau(int x, int y)
 map chargementMap()
 {
     FILE* fichierMap = NULL;
+    
     map instanceMap;
+    instanceMap.ptr_map = NULL;
+    instanceMap.x = 0;
+    instanceMap.y = 0;
+
     fichierMap = fopen("map/map.txt", "r");
 
     if(fichierMap == NULL)

@@ -17,10 +17,9 @@ int main()
     //Declaration variables
     bool enCours = true;
     bool activerConsole = true;
-    map map;
+    map instanceMap;
 
     //Initialise l'affichage et la console
-
     initscr();
     start_color();
 
@@ -34,7 +33,7 @@ int main()
     initFrames(TARGET_FPS);
 
     //Initialise la map
-    map = chargementMap();
+    instanceMap = chargementMap();
     
     //Initialise un joueur
     joueur j = initJoueur();
@@ -52,7 +51,7 @@ int main()
     {
         start = clock(); // compteur de début
 
-        affichage(j, map);
+        affichage(j, instanceMap);
 
         input = getch();
 
@@ -72,7 +71,7 @@ int main()
     }
     
     //Arret du jeu
-    libererMemoireMap(map);
+    libererMemoireMap(instanceMap);
 
     nodelay(stdscr, false);
     getch();
