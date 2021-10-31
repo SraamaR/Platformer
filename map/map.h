@@ -1,7 +1,7 @@
 #ifndef MAP_H
 #define MAP_H
 
-typedef struct map{
+typedef struct map {
     char** ptr_map;
     int x;  //Longueur ligne
     int y;  //Nombre lignes
