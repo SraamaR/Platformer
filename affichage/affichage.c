@@ -51,8 +51,8 @@ void affichage(joueur j, map instanceMap)
         for (int x = cam.centrex-10; x < cam.centrex+11; x++) {
             if (x == j.posx && y == j.posy)
                 mvwprintw(platformer, wy, wx, "J");
-            else if (x == cam.centrex && y == cam.centrey)
-                mvwprintw(platformer, wy, wx, "C");
+            // else if (x == cam.centrex && y == cam.centrey)
+                // mvwprintw(platformer, wy, wx, "C");
             else
                 mvwprintw(platformer, wy, wx, "%c", instanceMap.ptr_map[x][y]);
             wx++;
