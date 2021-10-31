@@ -3,12 +3,12 @@
 #include <stdio.h>
 #include <ncurses.h>
 
-#include "../affichage/affichage.h"
 #include "../affichage/console.h"
+# include "./map.h"
 
-const int LONGUEUR_MIN_MAP = 4;
+const int LONGUEUR_MIN_MAP = 21;
 const int LONGUEUR_MAX_MAP = 255;
-const int NBRE_LIGNES_MIN_MAP = 4;
+const int NBRE_LIGNES_MIN_MAP = 7;
 const int NBRE_LIGNES_MAX_MAP = 255;
 
 const char CHAR_BORD  = '+';
