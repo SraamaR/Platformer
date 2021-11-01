@@ -1,30 +1,18 @@
-platformer: main.o affichage.o gameplay.o joueur.o map.o console.o frames.o
-	gcc main.o affichage.o gameplay.o joueur.o map.o console.o frames.o -o platformer -lncurses -Wall
+CC=gcc
+CFLAGS=-Wall
+LIBS=-lm -lncurses
+BUILDDIR=build
 
-main.o: main.c affichage/affichage.h gameplay/gameplay.h map/map.h affichage/console.h moteur/frames.h
-	gcc -c main.c
+SOURCES := $(shell find ./ -name '*.c')
+OBJECTS := $(addprefix $(BUILDDIR),$(SOURCES:.%.c=%.o))
 
-affichage.o: affichage/affichage.c gameplay/joueur.h affichage/console.h map/map.h
-	gcc -c affichage/affichage.c
+$(BUILDDIR)/%.o: %.c
+	mkdir -p $(@D)
+	$(CC) -c -o $@ $< $(CFLAGS)
 
-gameplay.o: gameplay/gameplay.c gameplay/input.h gameplay/joueur.h affichage/affichage.h
-	gcc -c gameplay/gameplay.c
-
-input.o: gameplay/input.c
-	gcc -c gameplay/input.c
-
-joueur.o: gameplay/joueur.c
-	gcc -c gameplay/joueur.c
-
-console.o: affichage/console.c
-	gcc -c affichage/console.c
-
-map.o: map/map.c affichage/affichage.h affichage/console.h
-	gcc -c map/map.c
-
-frames.o: moteur/frames.c
-	gcc -c moteur/frames.c
+platformer: $(OBJECTS)
+	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 clean:
-	rm -f *.o
-	rm -f platformer
+	rm -v platformer
+	rm -rfv build

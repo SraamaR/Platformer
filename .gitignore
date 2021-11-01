@@ -2,3 +2,5 @@ platformer
 
 .vscode
 *.o
+
+build
