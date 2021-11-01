@@ -44,14 +44,14 @@ void affichage(joueur j, map instanceMap)
     //Calcul de la position du joueur dans la fenêtre
     for (int i = 0; i < nbre_char_x; i++)
     {
-        if (i == j.posx)
+        if (i == j.position.x)
         {
             posJoueurEcranX = i;
         }
     }
     for (int i = 0; i < nbre_char_y; i++)
     {
-        if (instanceMap.y - 1 - i == j.posy)
+        if (instanceMap.y - 1 - i == j.position.y)
         {
             posJoueurEcranY = i;
         }
@@ -91,7 +91,7 @@ void affichage(joueur j, map instanceMap)
             decalage_x++;
             for(int i = 0; i < nbre_char_x; i++)
             {
-                if(i + decalage_x == j.posx)
+                if(i + decalage_x == j.position.x)
                 {
                     posJoueurEcranX = i;
                 }
@@ -106,7 +106,7 @@ void affichage(joueur j, map instanceMap)
             decalage_y++;
             for(int i = 0; i < nbre_char_y; i++)
             {
-                if(instanceMap.y - i - decalage_y == j.posy)
+                if(instanceMap.y - i - decalage_y == j.position.y)
                 {
                     posJoueurEcranY = i;
                 }
@@ -131,11 +131,11 @@ void affichage(joueur j, map instanceMap)
                 }
 
                 //Affichage du joueur
-                if(c_x == j.posx && c_y == j.posy)
+                if(c_x == j.position.x && c_y == j.position.y)
                 {
                     mvwprintw(platformer, curseurY, curseurX, "|");
                 }
-                if(c_x == j.posx && c_y == j.posy - 1)
+                if(c_x == j.position.x && c_y == j.position.y - 1)
                 {
                     mvwprintw(platformer, curseurY, curseurX, "|");
                 }
@@ -146,7 +146,7 @@ void affichage(joueur j, map instanceMap)
     }
 
     /*Tests
-    mvwprintw(platformer, posJoueurEcranY - 1, j.posx, "|");
+    mvwprintw(platformer, posJoueurEcranY - 1, j.position.x, "|");
     vwprintw(platformer, 1, 1, "%d, %d", posJoueurEcranX, posJoueurEcranY);
     mvwprintw(platformer, 2, 1, "%d, %d", decalage_x, decalage_y);
     mvwprintw(platformer, 3, 1, "%d, %d", activerCameraX, activerCameraY);

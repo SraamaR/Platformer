@@ -52,6 +52,9 @@ int main()
     // transforme getch en appel non-bloquant
     nodelay(stdscr, true);
 
+    // autorise l'utilisation des flèches
+    keypad(stdscr, true);
+
     // variable compteur (compte le temps nécessaire au calculs et à l'affichage)
     clock_t start, end;
 
@@ -59,11 +62,13 @@ int main()
     {
         start = clock();    // compteur de début
 
+        actualisation(&j);
+
         affichage(j, instanceMap);
 
         input = getch();
 
-        inputControle(input, &enCours); // gère l'entrée utilisateur
+        inputControle(input, &enCours, &j); // gère l'entrée utilisateur
 
         end = clock();  // compteur de fin
 

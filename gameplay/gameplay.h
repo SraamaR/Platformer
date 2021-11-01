@@ -5,4 +5,8 @@
 
 joueur initJoueur();
 
+void nouveauMouvement(joueur *j, float vx, float vy);
+
+void actualisation(joueur *j);
+
 #endif
