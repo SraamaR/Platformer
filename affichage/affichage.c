@@ -40,26 +40,26 @@ void affichage(joueur j, map instanceMap)
 
     int posJoueurEcranX = -1;
     int posJoueurEcranY = -1;
+    int decalage_x = 0;
+    int decalage_x_max = instanceMap.x - nbre_char_x;
+    int decalage_y = 0;
 
     //Calcul de la position du joueur dans la fenêtre
     for (int i = 0; i < nbre_char_x; i++)
     {
-        if (i == j.position.x)
+        if (i + decalage_x == j.position.x)
         {
             posJoueurEcranX = i;
         }
     }
     for (int i = 0; i < nbre_char_y; i++)
     {
-        if (instanceMap.y - 1 - i == j.position.y)
+        if (instanceMap.y - 1 - i - decalage_y == j.position.y)
         {
             posJoueurEcranY = i;
         }
     }
 
-    int decalage_x = 0;
-    int decalage_y = 0;
-       
     bool centrerX = false;
     //bool centrerY = false;
 
@@ -67,7 +67,7 @@ void affichage(joueur j, map instanceMap)
     {
         centrerX = true;
     }
-    else if(activerCameraX && posJoueurEcranX > nbre_char_x/2)
+    else if(activerCameraX && j.position.x > nbre_char_x/2)
     {
         centrerX = true;
     }
@@ -96,6 +96,11 @@ void affichage(joueur j, map instanceMap)
                     posJoueurEcranX = i;
                 }
             }
+
+            if(decalage_x == decalage_x_max)
+            {
+                break;
+            }
         }
     }
     //Pour y : On décale de façon à ce que le joueur soit dans la fenêtre
@@ -122,12 +127,16 @@ void affichage(joueur j, map instanceMap)
         for (int k = 0; k < nbre_char_x; k++)
         {
             int c_x = k + decalage_x;
-            if(c_x < instanceMap.x && c_x >= 0)
+            if(c_y < instanceMap.y && c_y >= 0)
             {
                 char c = instanceMap.ptr_map[c_x][c_y];
                 if(c != CHAR_SPAWN)
                 {
                     mvwprintw(platformer, curseurY, curseurX, "%c", c);
+                }
+                else
+                {
+                    mvwprintw(platformer, curseurY, curseurX, " ");
                 }
 
                 //Affichage du joueur
@@ -139,6 +148,10 @@ void affichage(joueur j, map instanceMap)
                 {
                     mvwprintw(platformer, curseurY, curseurX, "|");
                 }
+            }
+            else
+            {
+                mvwprintw(platformer, curseurY, curseurX, " ");
             }
             curseurX++;
         }
@@ -172,13 +185,6 @@ void initAffichage()
     }
 
     getmaxyx(platformer, yMax, xMax);
-
-    /* Tests pour créer une fenêtre de jeu 
-    mvwprintw(platformer, 3, 1, "x = %d, y = %d", xMax, yMax);
-    mvwprintw(platformer, 4, 1, "h = %d, w = %d",(yMax/2)-(WINDOW_HEIGHT/2), (xMax/2)-(WINDOW_WIDTH/2));
-    jeu = subwin(stdscr, WINDOW_WIDTH, WINDOW_HEIGHT, (yMax/2)-(WINDOW_HEIGHT/2), (xMax/2)-(WINDOW_WIDTH/2));
-    box(jeu, ACS_VLINE, ACS_HLINE);
-    */
 
     //Contour blanc
     box(platformer, ACS_VLINE, ACS_HLINE);

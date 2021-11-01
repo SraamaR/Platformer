@@ -1,5 +1,5 @@
 #define TARGET_FPS 60 // nombre de fps visé (defaut : 60)
-#define DEVMODE true // active le mode développeur (console + log)
+#define DEVMODE false // active le mode développeur (console + log)
 
 #include <ncurses.h>
 #include <stdbool.h>
@@ -27,6 +27,7 @@ int main()
     //Initialise l'affichage et la console
     initscr();
     start_color();
+    curs_set(0); //Curseur invisible
 
     if(DEVMODE)
     {
