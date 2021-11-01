@@ -1,6 +1,9 @@
 #ifndef MAP_H
 #define MAP_H
 
+extern const char CHAR_BORD;
+extern const char CHAR_SPAWN;
+
 typedef struct map {
     char** ptr_map;
     int x;  //Longueur ligne

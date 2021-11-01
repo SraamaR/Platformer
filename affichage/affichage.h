@@ -13,4 +13,6 @@ void initAffichage();
 
 void affichage(joueur j, map map);
 
+void libererMemoireAffichage();
+
 #endif

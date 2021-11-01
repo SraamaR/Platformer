@@ -14,4 +14,6 @@ void afficherMessageConsole(char str[], int msgType);
 
 void initConsole();
 
+void libererMemoireConsole();
+
 #endif

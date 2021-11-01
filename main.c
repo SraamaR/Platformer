@@ -26,7 +26,7 @@ int main()
     initscr();
     start_color();
 
-    if (activerConsole)
+    if(activerConsole == true)
     {
         initConsole();
     }
@@ -72,12 +72,17 @@ int main()
         frameSuivante();
     }
     
-    //Arret du jeu
-    libererMemoireMap(instanceMap);
-
     nodelay(stdscr, false);
     getch();
 
+    //Arret du jeu
+    if(activerConsole == true)
+    {
+        libererMemoireConsole();
+    }
+    libererMemoireAffichage();
+    libererMemoireMap(instanceMap);
     endwin();
+
     return 0;
 }

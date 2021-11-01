@@ -82,3 +82,8 @@ void initConsole()
 
     return;
 }
+
+void libererMemoireConsole()
+{
+    delwin(console);
+}
