@@ -1,4 +1,5 @@
-#define TARGET_FPS 60
+#define TARGET_FPS 60 // nombre de fps visé (defaut : 60)
+#define DEVMODE true // active le mode développeur (console + log)
 
 #include <ncurses.h>
 #include <stdbool.h>
@@ -10,12 +11,13 @@
 #include "gameplay/gameplay.h"
 #include "map/map.h"
 #include "moteur/frames.h"
+#include "moteur/logger.h"
+#include "moteur/input.h"
 
 int main() 
 {
     //Declaration variables
     bool enCours = true;
-    bool activerConsole = true;
     map instanceMap;
     
     //Coordonées du point d'apparition
@@ -26,10 +28,12 @@ int main()
     initscr();
     start_color();
 
-    if(activerConsole == true)
+    if(DEVMODE)
     {
         initConsole();
+        initLogFile();
     }
+
     initAffichage();
 
     // Initialise le compteur de frames
@@ -59,11 +63,7 @@ int main()
 
         input = getch();
 
-        if (input == 27)    // 27 == ESC    
-        { 
-            enCours = false;
-            afficherMessageConsole("ESC pressée", WARNMSG);
-        }
+        inputControle(input, &enCours); // gère l'entrée utilisateur
 
         end = clock();  // compteur de fin
 
@@ -76,9 +76,10 @@ int main()
     getch();
 
     //Arret du jeu
-    if(activerConsole == true)
+    if(DEVMODE)
     {
         libererMemoireConsole();
+        closeLogFile();
     }
     libererMemoireAffichage();
     libererMemoireMap(instanceMap);

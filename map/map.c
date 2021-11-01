@@ -79,7 +79,7 @@ void tailleMap(FILE* fichierMap, map instanceMap, int* x, int* y)
         }
     }
 
-    char c;
+    char c = ' ';
     char c_precedent = c;
     //On place le curseur à la position 0
     fseek(fichierMap, 0, SEEK_SET);
@@ -187,7 +187,6 @@ map chargementMap()
     }
 
     //Chargement map
-    char c;
     for(int i = 0; i < instanceMap.x; i++)
     {
         for(int j = 0; j < instanceMap.y; j++)

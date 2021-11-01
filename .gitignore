@@ -1,6 +1,9 @@
+# fichiers config visual studio code 
+.vscode 
+
+# fichiers de build
+build
 platformer
 
-.vscode
-*.o
-
-build
+# fichier de log
+log.txt

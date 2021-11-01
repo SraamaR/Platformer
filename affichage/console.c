@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "../moteur/frames.h"
+#include "../moteur/logger.h"
 
 // console : permet d'afficher les messageList d'erreurs et de deboguer le programme (version developpement)
 
@@ -33,6 +34,9 @@ void afficherMessageConsole(char* str, int msgType)
     {
         return;
     }
+
+    // ajoute le message dans le log
+    newLog(str);
 
     // On nettoie la fenêtre
     wclear(console);
@@ -75,8 +79,6 @@ void initConsole()
     init_pair(ERRMSG, COLOR_RED, COLOR_BLACK);
     init_pair(WARNMSG, COLOR_YELLOW, COLOR_BLACK);
 
-    int xMax = getmaxx(console);
-
     consoleActive = true;
     afficherMessageConsole("Initialisation de la console effectuee", INFOMSG);
 
@@ -86,4 +88,6 @@ void initConsole()
 void libererMemoireConsole()
 {
     delwin(console);
+
+    return;
 }
