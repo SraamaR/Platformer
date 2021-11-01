@@ -145,16 +145,13 @@ void affichage(joueur j, map instanceMap)
         curseurY--;
     }
 
-
-    //Afficher joueur
-
-
-    //Tests
-    //mvwprintw(platformer, posJoueurEcranY - 1, j.posx, "|");
-    mvwprintw(platformer, 1, 1, "%d, %d", posJoueurEcranX, posJoueurEcranY);
+    /*Tests
+    mvwprintw(platformer, posJoueurEcranY - 1, j.posx, "|");
+    vwprintw(platformer, 1, 1, "%d, %d", posJoueurEcranX, posJoueurEcranY);
     mvwprintw(platformer, 2, 1, "%d, %d", decalage_x, decalage_y);
-    //mvwprintw(platformer, 3, 1, "%d, %d", activerCameraX, activerCameraY);
+    mvwprintw(platformer, 3, 1, "%d, %d", activerCameraX, activerCameraY);
     mvwprintw(platformer, 4, 1, "%d, %d", nbre_char_x, nbre_char_y);
+    */
 
     box(platformer, ACS_VLINE, ACS_HLINE);
     wrefresh(platformer);
