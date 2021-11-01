@@ -8,10 +8,36 @@
 WINDOW *platformer;
 int xMax, yMax;
 
-// affiche le jeu
+//Calcule la position du joueur dans la fenêtre, retourne -1 si le joueur n'est pas visible
+int calculPosEcranX(int decalage_x, int nbre_char_x, int joueurPosX)
+{
+    for (int i = 0; i < nbre_char_x; i++)
+    {
+        if (i + decalage_x == joueurPosX)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+//Calcule la position du joueur dans la fenêtre, retourne -1 si le joueur n'est pas visible
+//On calcule la position du char du haut du joueur pour qu'il ne soit pas tronqué
+int calculPosEcranY(int decalage_y, int nbre_char_y, int joueurPosY, int mapY)
+{
+    for (int i = 0; i < nbre_char_y; i++)
+    {
+        if (mapY - 1 - i - decalage_y == joueurPosY - 1)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+//Rafraîchi l'affichage à chaque frame
 void affichage(joueur j, map instanceMap)
 {
-    //Char maximum qu'on peut afficher dans la fenêtre
+    //Nombre de char maximum qu'on peut afficher dans la fenêtre
     int nbre_char_x = 0;
     int nbre_char_y = 0;
 
@@ -19,18 +45,18 @@ void affichage(joueur j, map instanceMap)
     bool activerCameraY = false;
 
     //On determine pour chaque axe le nombre de char maximum qu'on peut afficher et si la carte est trop grande pour la fenêtre 
-    if(xMax - 2 < instanceMap.x)
+    if(xMax < instanceMap.x)
     {
-        nbre_char_x = xMax - 2; //-2 pour les bordures
+        nbre_char_x = xMax;
         activerCameraX = true;
     }
     else
     {
         nbre_char_x = instanceMap.x;
     }
-    if(yMax - 3 < instanceMap.y)
+    if(yMax - 1 < instanceMap.y)
     {
-        nbre_char_y = yMax - 3; //-3 pour les bordures + le titre du jeu
+        nbre_char_y = yMax - 1; //-1 pour le titre du jeu
         activerCameraY = true;
     }
     else
@@ -38,50 +64,25 @@ void affichage(joueur j, map instanceMap)
         nbre_char_y = instanceMap.y;
     }
 
-    int posJoueurEcranX = -1;
-    int posJoueurEcranY = -1;
     int decalage_x = 0;
     int decalage_x_max = instanceMap.x - nbre_char_x;
     int decalage_y = 0;
+    int decalage_y_max = instanceMap.y - nbre_char_y;
 
     //Calcul de la position du joueur dans la fenêtre
-    for (int i = 0; i < nbre_char_x; i++)
-    {
-        if (i + decalage_x == j.position.x)
-        {
-            posJoueurEcranX = i;
-        }
-    }
-    for (int i = 0; i < nbre_char_y; i++)
-    {
-        if (instanceMap.y - 1 - i - decalage_y == j.position.y)
-        {
-            posJoueurEcranY = i;
-        }
-    }
+    int posJoueurEcranX = calculPosEcranX(decalage_x, nbre_char_x, j.position.x);
+    int posJoueurEcranY = calculPosEcranY(decalage_y, nbre_char_y, j.position.y, instanceMap.y);
 
     bool centrerX = false;
-    //bool centrerY = false;
-
     if(posJoueurEcranX == -1)
     {
         centrerX = true;
     }
+    //On centre le joueur à partir du moment où il se trouve suffisament loin du bord
     else if(activerCameraX && j.position.x > nbre_char_x/2)
     {
         centrerX = true;
     }
-
-    /*
-    if(posJoueurEcranY == -1)
-    {
-        centrerY = true;
-    }
-    else if(activerCameraY && posJoueurEcranY > (nbre_char_y/2 + 1))
-    {
-        //centrerY = true;
-    }
-    */
 
     //Pour x : Si le décalage est activé on décale de façon à avoir le joueur au centre
     if(centrerX)
@@ -89,37 +90,33 @@ void affichage(joueur j, map instanceMap)
         while(posJoueurEcranX != nbre_char_x/2)
         {
             decalage_x++;
-            for(int i = 0; i < nbre_char_x; i++)
-            {
-                if(i + decalage_x == j.position.x)
-                {
-                    posJoueurEcranX = i;
-                }
-            }
-
+            posJoueurEcranX = calculPosEcranX(decalage_x, nbre_char_x, j.position.x);
+            
+            //Lorsqu'on arrive à la fin de la map on ne décale plus
             if(decalage_x == decalage_x_max)
             {
                 break;
             }
         }
     }
-    //Pour y : On décale de façon à ce que le joueur soit dans la fenêtre
+    //Pour y : On décale de façon à ce que le haut du joueur soit dans la fenêtre
     if(activerCameraY)
     {
         while(posJoueurEcranY == -1)
         {
             decalage_y++;
-            for(int i = 0; i < nbre_char_y; i++)
+            posJoueurEcranY = calculPosEcranY(decalage_y, nbre_char_y, j.position.y, instanceMap.y);
+
+            //Lorsqu'on arrive à la fin de la map on ne décale plus
+            if(decalage_y == decalage_y_max)
             {
-                if(instanceMap.y - i - decalage_y == j.position.y)
-                {
-                    posJoueurEcranY = i;
-                }
+                break;
             }
         }
     }
-        
-    int curseurY = yMax - 2;
+    
+    //On print ligne par ligne du bas vers le haut
+    int curseurY = yMax - 1;
     for (int i = 0; i < nbre_char_y; i++)
     {
         int curseurX = (xMax / 2) - nbre_char_x / 2;
@@ -127,31 +124,24 @@ void affichage(joueur j, map instanceMap)
         for (int k = 0; k < nbre_char_x; k++)
         {
             int c_x = k + decalage_x;
-            if(c_y < instanceMap.y && c_y >= 0)
+            char c = instanceMap.ptr_map[c_x][c_y];
+            if(c != CHAR_SPAWN)
             {
-                char c = instanceMap.ptr_map[c_x][c_y];
-                if(c != CHAR_SPAWN)
-                {
-                    mvwprintw(platformer, curseurY, curseurX, "%c", c);
-                }
-                else
-                {
-                    mvwprintw(platformer, curseurY, curseurX, " ");
-                }
-
-                //Affichage du joueur
-                if(c_x == j.position.x && c_y == j.position.y)
-                {
-                    mvwprintw(platformer, curseurY, curseurX, "|");
-                }
-                if(c_x == j.position.x && c_y == j.position.y - 1)
-                {
-                    mvwprintw(platformer, curseurY, curseurX, "|");
-                }
+                mvwprintw(platformer, curseurY, curseurX, "%c", c);
             }
             else
             {
                 mvwprintw(platformer, curseurY, curseurX, " ");
+            }
+
+            //Affichage du joueur
+            if(c_x == j.position.x && c_y == j.position.y)
+            {
+                mvwprintw(platformer, curseurY, curseurX, "|");
+            }
+            else if(c_x == j.position.x && c_y == j.position.y - 1)
+            {
+                mvwprintw(platformer, curseurY, curseurX, "|");
             }
             curseurX++;
         }
@@ -159,14 +149,12 @@ void affichage(joueur j, map instanceMap)
     }
 
     /*Tests
-    mvwprintw(platformer, posJoueurEcranY - 1, j.position.x, "|");
-    vwprintw(platformer, 1, 1, "%d, %d", posJoueurEcranX, posJoueurEcranY);
     mvwprintw(platformer, 2, 1, "%d, %d", decalage_x, decalage_y);
     mvwprintw(platformer, 3, 1, "%d, %d", activerCameraX, activerCameraY);
     mvwprintw(platformer, 4, 1, "%d, %d", nbre_char_x, nbre_char_y);
+    mvwprintw(platformer, 1, 1, "%d, %d", yMax, posJoueurEcranY);
     */
 
-    box(platformer, ACS_VLINE, ACS_HLINE);
     wrefresh(platformer);
 }
 
@@ -178,19 +166,13 @@ void initAffichage()
     {
         platformer = subwin(stdscr, LINES - ligneMax - 1, COLS, ligneMax + 1, 0);
     }
-
     else
     {
         platformer = subwin(stdscr, LINES, COLS, 0, 0);
     }
 
     getmaxyx(platformer, yMax, xMax);
-
-    //Contour blanc
-    box(platformer, ACS_VLINE, ACS_HLINE);
-
-    mvwprintw(platformer, 1, xMax / 2 - 5, "Platformer\n");
-
+    mvwprintw(platformer, 0, xMax / 2 - 5, "Platformer\n");
     afficherMessageConsole("Initialisation de l'affichage effectuee", INFOMSG);
 
     return;
