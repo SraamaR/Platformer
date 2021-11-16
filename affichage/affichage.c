@@ -164,7 +164,7 @@ void initAffichage()
     //On choisit la bonne taille en fonction de la présence de la console
     if (consoleActive == true)
     {
-        platformer = subwin(stdscr, LINES - ligneMax - 1, COLS, ligneMax + 1, 0);
+        platformer = subwin(stdscr, LINES - nbLigneConsole - 1, COLS, nbLigneConsole + 1, 0);
     }
     else
     {

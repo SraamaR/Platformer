@@ -8,7 +8,7 @@ extern const int WARNMSG;
 extern const int INFOMSG;
 
 extern bool consoleActive;
-extern int ligneMax;
+extern int nbLigneConsole;
 
 void afficherMessageConsole(char str[], int msgType);
 
