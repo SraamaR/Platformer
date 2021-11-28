@@ -91,7 +91,7 @@ void initConsole()
         messageList[i].msg = malloc(COLS * sizeof(char)); // on prepare des strings du nombre de caractère que peut contenir l'écran
     }
 
-    console = subwin(stdscr, nbLigneConsole + 1, COLS, 0, 0);
+    console = subwin(stdscr, nbLigneConsole, COLS, 0, 0);
 
     init_pair(INFOMSG, COLOR_CYAN, COLOR_BLACK);
     init_pair(ERRMSG, COLOR_RED, COLOR_BLACK);

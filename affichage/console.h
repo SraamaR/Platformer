@@ -7,6 +7,7 @@ extern const int ERRMSG;
 extern const int WARNMSG;
 extern const int INFOMSG;
 
+extern WINDOW* console;
 extern bool consoleActive;
 extern int nbLigneConsole;
 
