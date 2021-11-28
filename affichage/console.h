@@ -2,6 +2,7 @@
 #define CONSOLE_H
 
 #include <stdbool.h>
+#include <ncurses.h>
 
 extern const int ERRMSG;
 extern const int WARNMSG;
