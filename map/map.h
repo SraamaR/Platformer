@@ -3,8 +3,10 @@
 
 extern const char CHAR_BORD;
 extern const char CHAR_SPAWN;
+extern const char CHAR_VIDE;
+extern const char CHAR_PLATFORME;
 
-typedef struct map {
+typedef struct s_map {
     char** ptr_map;
     int x;  //Longueur ligne
     int y;  //Nombre lignes

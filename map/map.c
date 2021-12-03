@@ -4,7 +4,7 @@
 #include <ncurses.h>
 
 #include "../affichage/console.h"
-# include "./map.h"
+#include "./map.h"
 
 const int LONGUEUR_MIN_MAP = 21;
 const int LONGUEUR_MAX_MAP = 255;
@@ -13,6 +13,8 @@ const int NBRE_LIGNES_MAX_MAP = 255;
 
 const char CHAR_BORD  = '+';
 const char CHAR_SPAWN = '#';
+const char CHAR_VIDE  = ' ';
+const char CHAR_PLATFORME = '-';
 
 void libererMemoireMap(map instanceMap)
 {
@@ -206,15 +208,7 @@ map chargementMap()
     /* Tests
     mvprintw(LINES / 2 - 1, 1, "x = %d", *x);
     mvprintw(LINES / 2    , 1, "y = %d", *y);
-    for(int i = 0; i < instanceMap.y; i++)
-    {
-        mvprintw(LINES / 2 + 4 + i, 1, "");
-        for(int j = 0; j < instanceMap.x; j++)
-        {
-            c = instanceMap.ptr_map[j][i];
-            printw("%c", c);
-        }
-    } */
+    */
 
     afficherMessageConsole("Chargement map effectue", INFOMSG);
     fclose(fichierMap);
@@ -233,6 +227,7 @@ void posSpawnJoueur(int* x, int* y, map instanceMap)
             {
                 *x = i;
                 *y = j;
+                instanceMap.ptr_map[i][j] = CHAR_VIDE;
                 return;
             }
         }

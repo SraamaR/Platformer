@@ -4,6 +4,7 @@
 #include <math.h>
 
 #include "joueur.h"
+#include "gameplay.h"
 #include "../affichage/affichage.h"
 #include "../affichage/console.h"
 #include "../map/map.h"
@@ -13,7 +14,7 @@
 const int MOUV_X = 0;
 const int MOUV_Y = 1;
 
-const float V_MAX = 6;
+const float V_MAX = 9;
 const float VY_MAX = 15;
 
 //Initialise un joueur aux positions (x, y)
@@ -134,7 +135,7 @@ void nouveauX(joueur *j){
 
 }
 
-void checkCollision(joueur *j)
+void checkCollision(joueur *j, map instanceMap)
 {
 
     // TODO : vérifier si collision et arrêter les mouvement correspondants
@@ -142,8 +143,10 @@ void checkCollision(joueur *j)
 }
 
 // actualise tout les mouvement dans le jeu
-void actualisation(joueur *j)
+void actualisation(joueur *j, map instanceMap)
 {
+
+    //checkCollision(j, instanceMap);
 
     j->positionPrecise.y -= valeurVitesse(j->vitesseY);
     j->positionPrecise.y -= valeurAcceleration(j->accelY);
@@ -153,12 +156,31 @@ void actualisation(joueur *j)
     j->position.x = round(j->positionPrecise.x);
     j->position.y = round(j->positionPrecise.y);
 
-    checkCollision(j);
-
     char msg[100];
     sprintf(msg, "x: %d, y: %d", j->position.x, j->position.y);
     newLog(msg);
 
     return;
 
+}
+
+void mouvSaut(joueur* j)
+{
+    ajouterVitesse(j, 20.0, MOUV_Y);
+    ajouterAcceleration(j, -g, MOUV_Y);
+    afficherMessageConsole("Nouveau mouvement", INFOMSG);
+}
+
+void mouvDroite(joueur* j)
+{
+    ajouterVitesse(j, 3.0, MOUV_X);
+    ajouterAcceleration(j, -1.5, MOUV_X);
+    afficherMessageConsole("Nouveau mouvement lateral", INFOMSG);
+}
+
+void mouvGauche(joueur* j)
+{
+    ajouterVitesse(j, -3.0, MOUV_X);
+    ajouterAcceleration(j, 1.5, MOUV_X);
+    afficherMessageConsole("Nouveau mouvement lateral", INFOMSG);
 }

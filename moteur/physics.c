@@ -1,29 +1,9 @@
 #include <math.h>
 #include "./frames.h"
+#include "./physics.h"
 
 const float g = 10;
 const float coefficientVitesse = 2.0; // définit la vitesse du mouvement (et donc par conséquent du jeu)
-
-typedef struct coords {
-
-    int x;
-    int y;
-
-} coords;
-
-typedef struct vecteur {
-
-    float x;
-    float y;
-
-} vecteur;
-
-typedef struct mouvement {
-
-    float valeur;
-    int tempsModif;
-
-} mouvement;
 
 // retourne la position relative par rapport a l'instant précédent
 float valeurAcceleration(mouvement accel)
