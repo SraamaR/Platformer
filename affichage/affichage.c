@@ -3,34 +3,49 @@
 #include <stdlib.h>
 
 #include "./console.h"
-#include "./affichage.h"
-
+#include "../gameplay/joueur.h"
+#include "../map/map.h"
 
 WINDOW* titre;
 WINDOW* jeu;
 
+int nbColonneTerminal, nbLigneTerminal;
+int jxMax, jyMax;
+int txMax, tyMax;
+
+typedef struct s_camera {
+    int centrex;
+    int centrey;
+    int longueur;
+    int largeur;
+} camera;
+
 
 /* Redimensionne les différentes fenêtres */
-void redimensionnerWindow() 
+void redimensionnerFenetre() 
 {
-    //DEVMODE (version d'essaie, ne fonctionne pas très bien)
+    //DEVMODE
     if (consoleActive)
     {
-        nbLigneConsole = LINES/6;
-        if (nbLigneConsole > 5) 
+        wresize(titre, tyMax, nbColonneTerminal);
+        
+        nbLigneConsole = nbLigneTerminal/6;
+        if (nbLigneConsole > 5)
         {
             nbLigneConsole = 5;
         }
-        wresize(console, nbLigneConsole+1, COLS);
+        wresize(console, nbLigneConsole, nbLigneTerminal);
+        werase(console);
+        wrefresh(console);
         
-        wresize(titre, 3, COLS);
-        wresize(jeu, LINES-nbLigneConsole-4, COLS);
+        wresize(jeu, nbLigneTerminal-tyMax-nbLigneConsole, nbColonneTerminal);
+        box(titre, ACS_VLINE, ACS_HLINE);
     }
-    
+
     else 
     {
-        wresize(titre, 3, COLS);
-        wresize(jeu, LINES-3, COLS);
+        wresize(titre, tyMax, nbColonneTerminal);
+        wresize(jeu, nbLigneTerminal-tyMax, nbColonneTerminal);
     }
 
     return;
@@ -45,9 +60,9 @@ void positionnerCamera(camera* cam, joueur* j, map* instanceMap)
     {
         cam->centrex = cam->longueur/2;
     }
-    else if (j->position.x > instanceMap->x-(cam->longueur/2)-1)
+    else if (j->position.x > instanceMap->x-(cam->longueur/2))
     {
-        cam->centrex = instanceMap->x-(cam->longueur/2)-1;
+        cam->centrex = instanceMap->x-(cam->longueur/2);
     }
     else 
     {
@@ -59,9 +74,9 @@ void positionnerCamera(camera* cam, joueur* j, map* instanceMap)
     {
         cam->centrey = cam->largeur/2;
     }
-    else if (j->position.y > instanceMap->y-(cam->largeur/2)-1) 
+    else if (j->position.y > instanceMap->y-(cam->largeur/2)) 
     {
-        cam->centrey = instanceMap->y-(cam->largeur/2)-1;
+        cam->centrey = instanceMap->y-(cam->largeur/2);
     }
     else 
     {
@@ -76,13 +91,24 @@ void positionnerCamera(camera* cam, joueur* j, map* instanceMap)
 void affichage(joueur j, map instanceMap) 
 {
     // redimension des fenêtres
-    redimensionnerWindow();
-    
-    int jxMax, jyMax;
-    getmaxyx(jeu, jyMax, jxMax);
-    
-    wclear(jeu);
-    
+    if ((nbColonneTerminal != COLS) || (nbLigneTerminal != LINES)) 
+    {
+        nbColonneTerminal = COLS;
+        nbLigneTerminal = LINES;
+        
+        redimensionnerFenetre();
+        
+        getmaxyx(titre, tyMax, txMax);
+        werase(titre);
+        box(titre, ACS_VLINE, ACS_HLINE);
+        mvwprintw(titre, 1, (txMax/2)-4, "Platformer");
+        wrefresh(titre);
+        
+        getmaxyx(jeu, jyMax, jxMax);
+        werase(jeu);
+
+        afficherMessageConsole("Nouveau redimensionnement fenetre", INFOMSG);
+    }
 
 
     // définition de la camera
@@ -107,21 +133,23 @@ void affichage(joueur j, map instanceMap)
     int jx;
     int jy = (jyMax/2)-(cam.largeur/2);
     
-    for (int y = cam.centrey-(cam.largeur/2); y < cam.centrey+(cam.largeur/2)+1; y++) 
+    for (int y = cam.centrey-(cam.largeur/2); y < cam.centrey+(cam.largeur/2); y++) 
     {
         jx = (jxMax/2)-(cam.longueur/2);
         
-        for (int x = cam.centrex-(cam.longueur/2); x < cam.centrex+(cam.longueur/2)+1; x++) 
+        for (int x = cam.centrex-(cam.longueur/2); x < cam.centrex+(cam.longueur/2); x++) 
         {
             if (x == j.position.x && y == j.position.y) 
             {
-                mvwprintw(jeu, jy, jx, "|");
+                mvwprintw(jeu, jy, jx, "&");
             }
             
             //DEVMODE
             else if ((consoleActive) && ((x == cam.centrex) && (y == cam.centrey))) 
             {
+                wattron(jeu, COLOR_PAIR(consoleActive));
                 mvwprintw(jeu, jy, jx, "C");
+                wattroff(jeu, COLOR_PAIR(consoleActive));
             }
             
             else 
@@ -144,25 +172,36 @@ void affichage(joueur j, map instanceMap)
 /* Initialise l'affichage */
 void initAffichage()
 {
-    //DEVMODE (version d'essaie, ne fonctionne pas très bien)
-    if (consoleActive == true)
+    nbColonneTerminal = COLS;
+    nbLigneTerminal = LINES;
+
+
+    //DEVMODE
+    if (consoleActive)
     {
-        titre = subwin(stdscr, 3, COLS,  nbLigneConsole+1, 0);
-        jeu = subwin(stdscr, LINES-nbLigneConsole-4, COLS, nbLigneConsole+4, 0);
+        titre = subwin(stdscr, 3, nbColonneTerminal,  0, 0);
+        init_pair(consoleActive, COLOR_CYAN, COLOR_BLACK);
+        wattron(titre, COLOR_PAIR(consoleActive));
+        
+        jeu = subwin(stdscr, nbLigneTerminal-3-nbLigneConsole, nbColonneTerminal, 3+nbLigneConsole, 0);
     }
     
     else
     {
-        titre = subwin(stdscr, 3, COLS,  0, 0);
-        jeu = subwin(stdscr, LINES-3, COLS, 3, 0);
+        titre = subwin(stdscr, 3, nbColonneTerminal,  0, 0);
+        jeu = subwin(stdscr, nbLigneTerminal-3, nbColonneTerminal, 3, 0);
     }
 
-    // titre
-    int txMax;
-    txMax = getmaxx(titre);
 
+    // titre
+    getmaxyx(titre, tyMax, txMax);
+    
     box(titre, ACS_VLINE, ACS_HLINE);
     mvwprintw(titre, 1, (txMax/2)-4, "Platformer");
+
+
+    //jeu
+    getmaxyx(jeu, jyMax, jxMax);
 
 
     afficherMessageConsole("Initialisation de l'affichage effectuee", INFOMSG);
@@ -173,6 +212,12 @@ void initAffichage()
 /* Libère la mémoire de l'affichage (window) */
 void libererMemoireAffichage()
 {
+    //DEVMODE
+    if (consoleActive) 
+    {
+        wattroff(titre, COLOR_PAIR(consoleActive));
+    }
+
     wclear(titre);
     delwin(titre);
 

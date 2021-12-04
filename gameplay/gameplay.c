@@ -168,19 +168,19 @@ void mouvSaut(joueur* j)
 {
     ajouterVitesse(j, 20.0, MOUV_Y);
     ajouterAcceleration(j, -g, MOUV_Y);
-    afficherMessageConsole("Nouveau mouvement", INFOMSG);
+    afficherMessageConsole("Nouveau mouvement saut", INFOMSG);
 }
 
 void mouvDroite(joueur* j)
 {
     ajouterVitesse(j, 3.0, MOUV_X);
     ajouterAcceleration(j, -1.5, MOUV_X);
-    afficherMessageConsole("Nouveau mouvement lateral", INFOMSG);
+    afficherMessageConsole("Nouveau mouvement droite", INFOMSG);
 }
 
 void mouvGauche(joueur* j)
 {
     ajouterVitesse(j, -3.0, MOUV_X);
     ajouterAcceleration(j, 1.5, MOUV_X);
-    afficherMessageConsole("Nouveau mouvement lateral", INFOMSG);
+    afficherMessageConsole("Nouveau mouvement gauche", INFOMSG);
 }

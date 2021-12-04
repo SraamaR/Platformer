@@ -11,10 +11,15 @@ const int LONGUEUR_MAX_MAP = 255;
 const int NBRE_LIGNES_MIN_MAP = 7;
 const int NBRE_LIGNES_MAX_MAP = 255;
 
-const char CHAR_BORD  = '+';
-const char CHAR_SPAWN = '#';
+const char CHAR_BORD  = '#';
+const char CHAR_SPAWN = '%';
 const char CHAR_VIDE  = ' ';
+const char CHAR_PLEIN = '*';
+const char CHAR_MUR = '|';
+const char CHAR_COIN = '+';
 const char CHAR_PLATFORME = '-';
+const char CHAR_PIQUEHAUT = 'v';
+const char CHAR_PIQUEBAS = '^';
 
 void libererMemoireMap(map instanceMap)
 {
