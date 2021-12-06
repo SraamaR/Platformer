@@ -10,6 +10,7 @@
 #include "../map/map.h"
 #include "../moteur/frames.h"
 #include "../moteur/logger.h"
+#include "collision.h"
 
 const int MOUV_X = 0;
 const int MOUV_Y = 1;
@@ -17,28 +18,7 @@ const int MOUV_Y = 1;
 const float V_MAX = 9;
 const float VY_MAX = 15;
 
-//Initialise un joueur aux positions (x, y)
-joueur initJoueur(int x, int y)
-{
-    joueur j;
-    j.position.x = x;
-    j.position.y = y;
-    j.positionPrecise.x = x;
-    j.positionPrecise.y = y;
 
-    j.accelX.valeur = 0;
-    j.accelY.valeur = 0;
-    j.vitesseX.valeur = 0;
-    j.vitesseY.valeur = 0;
-
-    afficherMessageConsole("Initialisation du joueur effectuee", INFOMSG);
-    /*Tests
-    mvprintw(LINES / 2 - 1, 1, "x = %d", x);
-    mvprintw(LINES / 2    , 1, "y = %d", y);
-    */
-
-    return j;
-}
 
 // crée un nouveau mouvement avec un vecteur vitesse de composantes vx et vy
 void ajouterVitesse(joueur *j, float valeur, int type)
@@ -135,28 +115,32 @@ void nouveauX(joueur *j){
 
 }
 
-void checkCollision(joueur *j, map instanceMap)
-{
-
-    // TODO : vérifier si collision et arrêter les mouvement correspondants
-
-}
 
 // actualise tout les mouvement dans le jeu
 void actualisation(joueur *j, map instanceMap)
 {
+    checkCollision(j, instanceMap);
 
-    //checkCollision(j, instanceMap);
+    j->deltaPos.x = -j->positionPrecise.x; // on fait p(t+1) - p(t), on rentre uniquement -p(t) ici
+    j->deltaPos.y = j->positionPrecise.y; // de même mais l'autre signe (y décroissants)
 
     j->positionPrecise.y -= valeurVitesse(j->vitesseY);
     j->positionPrecise.y -= valeurAcceleration(j->accelY);
 
     nouveauX(j);
 
+    j->deltaPos.x += j->positionPrecise.x;
+    j->deltaPos.y -= j->positionPrecise.y;
+
     j->position.x = round(j->positionPrecise.x);
     j->position.y = round(j->positionPrecise.y);
 
+    
+
     char msg[100];
+    sprintf(msg, "dx: %f, dy: %f", j->deltaPos.x, j->deltaPos.y);
+    newLog(msg);
+
     sprintf(msg, "x: %d, y: %d", j->position.x, j->position.y);
     newLog(msg);
 
@@ -183,4 +167,8 @@ void mouvGauche(joueur* j)
     ajouterVitesse(j, -3.0, MOUV_X);
     ajouterAcceleration(j, 1.5, MOUV_X);
     afficherMessageConsole("Nouveau mouvement gauche", INFOMSG);
+
+    char msg[100];
+    sprintf(msg, "vx %f", j->vitesseX.valeur);
+    newLog(msg);
 }

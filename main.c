@@ -1,4 +1,4 @@
-#define TARGET_FPS 120 // nombre de fps visé (defaut : 60)
+#define TARGET_FPS 60 // nombre de fps visé (defaut : 60)
 #define DEVMODE false // active le mode développeur (console + log)
 
 #include <ncurses.h>
@@ -13,6 +13,7 @@
 #include "moteur/frames.h"
 #include "moteur/logger.h"
 #include "moteur/input.h"
+#include "gameplay/joueur.h"
 
 int main() 
 {

@@ -21,6 +21,9 @@ const char CHAR_PLATFORME = '-';
 const char CHAR_PIQUEHAUT = 'v';
 const char CHAR_PIQUEBAS = '^';
 
+const char COLLISION = 'a';
+const char PAS_COLLISION = ' ';
+
 void libererMemoireMap(map instanceMap)
 {
     //On libère chaque ligne
@@ -187,7 +190,9 @@ map chargementMap()
     tailleMap(fichierMap, instanceMap, &(instanceMap.x), &(instanceMap.y));
 
     instanceMap.ptr_map = initTableau(instanceMap.x, instanceMap.y);
-    if(instanceMap.ptr_map == NULL)
+    instanceMap.collision_map = initTableau(instanceMap.x, instanceMap.y);
+
+    if(instanceMap.ptr_map == NULL || instanceMap.collision_map == NULL)
     {
         fclose(fichierMap);
         exit(1);
@@ -199,7 +204,16 @@ map chargementMap()
         for(int j = 0; j < instanceMap.y; j++)
         {
             fseek(fichierMap, i + j*(instanceMap.x + 1), SEEK_SET);
-            instanceMap.ptr_map[i][j] = fgetc(fichierMap);
+
+            char courant = fgetc(fichierMap);
+
+            instanceMap.ptr_map[i][j] = courant;
+
+            if (courant == ' ' || courant == '%') {
+                instanceMap.collision_map[i][j] = PAS_COLLISION;
+            } else {
+                instanceMap.collision_map[i][j] = COLLISION;
+            }
         }
     }
 

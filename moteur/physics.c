@@ -2,7 +2,7 @@
 #include "./frames.h"
 #include "./physics.h"
 
-const float g = 10;
+const float g = 6;
 const float coefficientVitesse = 2.0; // définit la vitesse du mouvement (et donc par conséquent du jeu)
 
 // retourne la position relative par rapport a l'instant précédent
