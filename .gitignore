@@ -9,3 +9,7 @@ platformer
 log.txt
 
 vgcore*
+
+rapport/rapport.aux
+rapport/rapport.log
+rapport/rapport.syn*

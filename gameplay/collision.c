@@ -1,6 +1,7 @@
 #include "joueur.h"
 #include "../map/map.h"
 #include "../moteur/physics.h"
+#include "../moteur/frames.h"
 #include <stdbool.h>
 #include "../moteur/logger.h"
 #include <stdio.h>
@@ -55,6 +56,7 @@ void resetMouvementY(joueur *j, int type) {
     } else {
 
         j->accelY.valeur = -g;
+        //j->accelY.tempsModif = compteurFrame;
 
     }
 

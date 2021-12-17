@@ -30,8 +30,10 @@ void libererMemoireMap(map instanceMap)
     for(int i = 0; i < instanceMap.x; i++)
     {
         free(instanceMap.ptr_map[i]);
+        free(instanceMap.collision_map[i]);
     }
     free(instanceMap.ptr_map);
+    free(instanceMap.collision_map);
 }
 
 char** initTableau(int x, int y)
