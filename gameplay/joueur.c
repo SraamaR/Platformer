@@ -15,9 +15,13 @@ joueur initJoueur(int x, int y)
     j.deltaPos.y = 0.0;
     
     j.accelX.valeur = 0;
+    j.accelX.tempsModif = 0;
     j.accelY.valeur = 0;
+    j.accelY.tempsModif = 0;
     j.vitesseX.valeur = 0;
+    j.vitesseX.tempsModif = 0;
     j.vitesseY.valeur = 0;
+    j.vitesseY.tempsModif = 0;
 
     afficherMessageConsole("Initialisation du joueur effectuee", INFOMSG);
 
