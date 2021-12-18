@@ -60,7 +60,7 @@ void afficherMessageConsole(char* str, int msgType)
     messageList[ligneDernierMsg - 1].messageType = msgType;
 
     // On nettoie la fenêtre
-    wclear(console);
+    werase(console);
 
 
     for (int i = 0; i < ligneDernierMsg; i++)
