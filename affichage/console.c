@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "../moteur/frames.h"
 #include "../moteur/logger.h"
@@ -22,58 +23,75 @@ typedef struct messageConsole {
 bool consoleActive = false;
 WINDOW *console;
 
-int ligneMax = 0; // Nombre de ligne console
-int ligneConsole = 0; // Ligne actuelle
-const int ligneMaxMemoire = 50; // Nombre de ligne maximum en mémoire
+int nbLigneConsole = 0; // Nombre de ligne console
+int ligneDernierMsg = 0; // Ligne du dernier message
 
-messageConsole messageList[50];
+messageConsole messageList[5]; // on stocke les messages (5 lignes max)
 
 void afficherMessageConsole(char* str, int msgType)
 {
-    if(consoleActive == false)
+    if(!consoleActive)
     {
         return;
+    }
+
+    // Si on a atteint le max de la console, on décale d'un rang les messages
+    if (ligneDernierMsg == 5)
+    {
+        for(int i = 0; i < 4; i++)
+        {
+            messageList[i].messageType = messageList[i+1].messageType;
+            messageList[i].timeFrame = messageList[i+1].timeFrame;
+            strncpy(messageList[i].msg, messageList[i+1].msg, COLS * sizeof(char));
+        }
+    }
+
+
+    if (ligneDernierMsg < 5) 
+    {
+        ligneDernierMsg++;
     }
 
     // ajoute le message dans le log
     newLog(str);
 
+    strncpy(messageList[ligneDernierMsg - 1].msg, str, COLS * sizeof(char));
+    messageList[ligneDernierMsg - 1].timeFrame = compteurFrame;
+    messageList[ligneDernierMsg - 1].messageType = msgType;
+
     // On nettoie la fenêtre
     wclear(console);
 
-    // On détermine le nombre de lignes à afficher
-    int nbreLigneAffichage = ligneMax;
 
-    if(ligneConsole < ligneMax)
+    for (int i = 0; i < ligneDernierMsg; i++)
     {
-        nbreLigneAffichage = ligneConsole;
-    }
-
-    messageList[ligneConsole].msg = str;
-    messageList[ligneConsole].timeFrame = compteurFrame;
-    messageList[ligneConsole].messageType = msgType;
-
-    for (int i = 0; i <= nbreLigneAffichage; i++)
-    {
-        wattron(console, COLOR_PAIR(messageList[ligneConsole - nbreLigneAffichage + i].messageType));
-
-        wprintw(console, "%d : %s", messageList[ligneConsole - nbreLigneAffichage + i].timeFrame, messageList[ligneConsole - nbreLigneAffichage + i].msg);
-
+        wattron(console, COLOR_PAIR(messageList[i].messageType));
+        wprintw(console, "%d : %s", messageList[i].timeFrame, messageList[i].msg);
         wprintw(console, "\n");
+        wattroff(console, COLOR_PAIR(messageList[i].messageType));
 
-        wattroff(console, COLOR_PAIR(messageList[ligneConsole - nbreLigneAffichage + i].messageType));
         wrefresh(console);
     }
-   
-    ligneConsole++;
-    
+
+
     return;
 }
 
 void initConsole()
 {
-    ligneMax = LINES / 6;
-    console = subwin(stdscr, ligneMax + 1, COLS, 0, 0);
+    nbLigneConsole = LINES / 6;
+
+    if (nbLigneConsole > 5)
+    {
+        nbLigneConsole = 5; // on limite la taille de la console a 5 messages (peut être moins si l'écran est petit)
+    }
+
+    for (int i = 0; i < 5; i++)
+    {
+        messageList[i].msg = malloc(COLS * sizeof(char)); // on prepare des strings du nombre de caractère que peut contenir l'écran
+    }
+
+    console = subwin(stdscr, nbLigneConsole, COLS, 3, 0);
 
     init_pair(INFOMSG, COLOR_CYAN, COLOR_BLACK);
     init_pair(ERRMSG, COLOR_RED, COLOR_BLACK);

@@ -2,11 +2,19 @@
 #define GAMEPLAY_H
 
 #include "joueur.h"
+#include "../map/map.h"
 
-joueur initJoueur();
+extern const int MOUV_X;
+extern const int MOUV_Y;
 
-void nouveauMouvement(joueur *j, float vx, float vy);
+void ajouterVitesse(joueur *j, float valeur, int type);
 
-void actualisation(joueur *j);
+void ajouterAcceleration(joueur *j, float valeur, int type);
+
+void actualisation(joueur *j, map instanceMap);
+
+void mouvSaut(joueur* j);
+void mouvDroite(joueur* j);
+void mouvGauche(joueur* j);
 
 #endif

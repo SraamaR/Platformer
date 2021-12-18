@@ -13,6 +13,7 @@
 #include "moteur/frames.h"
 #include "moteur/logger.h"
 #include "moteur/input.h"
+#include "gameplay/joueur.h"
 
 int main() 
 {
@@ -63,7 +64,7 @@ int main()
     {
         start = clock();    // compteur de début
 
-        actualisation(&j);
+        actualisation(&j, instanceMap);
 
         affichage(j, instanceMap);
 
@@ -73,8 +74,7 @@ int main()
 
         end = clock();  // compteur de fin
 
-        napms(ecartFrameMs - (float)(start - end) / CLOCKS_PER_SEC); // attends le temps entre deux frames (moins le temps nécessaire au traitement)
-
+        napms(ecartFrameMs - 1000 * (float)(end - start) / CLOCKS_PER_SEC); // attends le temps entre deux frames (moins le temps nécessaire au traitement)
         frameSuivante();
     }
     

@@ -3,9 +3,15 @@
 
 extern const char CHAR_BORD;
 extern const char CHAR_SPAWN;
+extern const char CHAR_VIDE;
+extern const char CHAR_PLATFORME;
 
-typedef struct map {
+extern const char COLLISION;
+extern const char PAS_COLLISION; 
+
+typedef struct s_map {
     char** ptr_map;
+    char** collision_map;
     int x;  //Longueur ligne
     int y;  //Nombre lignes
 } map;

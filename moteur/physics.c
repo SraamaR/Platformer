@@ -1,34 +1,28 @@
 #include <math.h>
 #include "./frames.h"
+#include "./physics.h"
 
-const float g = 9.81;
+const float g = 6;
 const float coefficientVitesse = 2.0; // définit la vitesse du mouvement (et donc par conséquent du jeu)
 
-typedef struct coords {
-
-    int x;
-    int y;
-
-} coords;
-
-typedef struct vecteur {
-
-    float x;
-    float y;
-
-} vecteur;
-
-coords calculPosition(int frameDebut, vecteur v0) 
+// retourne la position relative par rapport a l'instant précédent
+float valeurAcceleration(mouvement accel)
 {
 
-    coords res;
-
-    float t = (compteurFrame - frameDebut) * ecartFrameMs / 1000 * coefficientVitesse;
-
-    res.x = round(v0.x * t);
-    
-    res.y = round(-g/2*t*t + v0.y * t);
-
+    float t = (compteurFrame - accel.tempsModif) * ecartFrameMs / 1000 * coefficientVitesse;
+    float tm1 = (compteurFrame - accel.tempsModif - 1) * ecartFrameMs / 1000 * coefficientVitesse;
+    float res = accel.valeur * t * t;
+    if (tm1 > 0) // si le temps - 1 (tm1) est supérieur à 0 on enleve le trajet fait précédemment
+    {
+        res -= accel.valeur * tm1 * tm1;
+    }
     return res;
+
+}
+
+float valeurVitesse(mouvement vitesse)
+{
+
+    return vitesse.valeur * ecartFrameMs / 1000 * coefficientVitesse; // pas besoin de soustraire, car c'est linéaire, tout les dt la position augmente de la même grandeur
 
 }

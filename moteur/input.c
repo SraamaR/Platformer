@@ -13,20 +13,16 @@ void inputControle(int entree, bool *enCours, joueur *j) {
             afficherMessageConsole("Le programme va s'arreter. Appuyez sur une touche pour continuer...", INFOMSG);
             break;
         case KEY_UP:
-            nouveauMouvement(j, 0.0, 10.0);
-            afficherMessageConsole("Nouveau mouvement", INFOMSG);
+            mouvSaut(j);
             break;
         case KEY_RIGHT:
-            nouveauMouvement(j, 3.0, 0.0);
-            afficherMessageConsole("Nouveau mouvement latéral", INFOMSG);
+            mouvDroite(j);
             break;
         case KEY_LEFT:
-            nouveauMouvement(j, -3.0, 0.0);
-            afficherMessageConsole("Nouveau mouvement latéral", INFOMSG);
+            mouvGauche(j);
             break;
         default:
             break;
-
     }
 
     return;

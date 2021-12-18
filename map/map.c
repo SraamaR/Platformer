@@ -4,15 +4,25 @@
 #include <ncurses.h>
 
 #include "../affichage/console.h"
-# include "./map.h"
+#include "./map.h"
 
 const int LONGUEUR_MIN_MAP = 21;
 const int LONGUEUR_MAX_MAP = 255;
 const int NBRE_LIGNES_MIN_MAP = 7;
 const int NBRE_LIGNES_MAX_MAP = 255;
 
-const char CHAR_BORD  = '+';
-const char CHAR_SPAWN = '#';
+const char CHAR_BORD  = '#';
+const char CHAR_SPAWN = '%';
+const char CHAR_VIDE  = ' ';
+const char CHAR_PLEIN = '*';
+const char CHAR_MUR = '|';
+const char CHAR_COIN = '+';
+const char CHAR_PLATFORME = '-';
+const char CHAR_PIQUEHAUT = 'v';
+const char CHAR_PIQUEBAS = '^';
+
+const char COLLISION = 'a';
+const char PAS_COLLISION = ' ';
 
 void libererMemoireMap(map instanceMap)
 {
@@ -20,8 +30,10 @@ void libererMemoireMap(map instanceMap)
     for(int i = 0; i < instanceMap.x; i++)
     {
         free(instanceMap.ptr_map[i]);
+        free(instanceMap.collision_map[i]);
     }
     free(instanceMap.ptr_map);
+    free(instanceMap.collision_map);
 }
 
 char** initTableau(int x, int y)
@@ -180,7 +192,9 @@ map chargementMap()
     tailleMap(fichierMap, instanceMap, &(instanceMap.x), &(instanceMap.y));
 
     instanceMap.ptr_map = initTableau(instanceMap.x, instanceMap.y);
-    if(instanceMap.ptr_map == NULL)
+    instanceMap.collision_map = initTableau(instanceMap.x, instanceMap.y);
+
+    if(instanceMap.ptr_map == NULL || instanceMap.collision_map == NULL)
     {
         fclose(fichierMap);
         exit(1);
@@ -192,7 +206,16 @@ map chargementMap()
         for(int j = 0; j < instanceMap.y; j++)
         {
             fseek(fichierMap, i + j*(instanceMap.x + 1), SEEK_SET);
-            instanceMap.ptr_map[i][j] = fgetc(fichierMap);
+
+            char courant = fgetc(fichierMap);
+
+            instanceMap.ptr_map[i][j] = courant;
+
+            if (courant == ' ' || courant == '%') {
+                instanceMap.collision_map[i][j] = PAS_COLLISION;
+            } else {
+                instanceMap.collision_map[i][j] = COLLISION;
+            }
         }
     }
 
@@ -206,15 +229,7 @@ map chargementMap()
     /* Tests
     mvprintw(LINES / 2 - 1, 1, "x = %d", *x);
     mvprintw(LINES / 2    , 1, "y = %d", *y);
-    for(int i = 0; i < instanceMap.y; i++)
-    {
-        mvprintw(LINES / 2 + 4 + i, 1, "");
-        for(int j = 0; j < instanceMap.x; j++)
-        {
-            c = instanceMap.ptr_map[j][i];
-            printw("%c", c);
-        }
-    } */
+    */
 
     afficherMessageConsole("Chargement map effectue", INFOMSG);
     fclose(fichierMap);
@@ -233,6 +248,7 @@ void posSpawnJoueur(int* x, int* y, map instanceMap)
             {
                 *x = i;
                 *y = j;
+                instanceMap.ptr_map[i][j] = CHAR_VIDE;
                 return;
             }
         }

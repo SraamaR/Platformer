@@ -11,7 +11,7 @@ void initFrames(int fps)
 
     framesParSecondes = fps;
 
-    ecartFrameMs = 1000 / fps; 
+    ecartFrameMs = 1000.f / fps; 
 
     return;
 
