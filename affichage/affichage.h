@@ -4,10 +4,17 @@
 #include "../gameplay/joueur.h"
 #include "../map/map.h"
 
+void initCurses();
 
-void initAffichage();
+void afficherMenu();
 
-void affichage(joueur j, map map);
+void afficherMsgVictoire();
+
+void afficherMsgMort();
+
+void initAffichageJeu();
+
+void affichageJeu(joueur j, map map);
 
 void libererMemoireAffichage();
 

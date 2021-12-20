@@ -16,6 +16,8 @@ typedef struct s_joueur {
 
 } joueur;
 
-joueur initJoueur();
+joueur initJoueurSpawn();
+
+void defSpawn(int x, int y);
 
 #endif

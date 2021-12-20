@@ -3,22 +3,21 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "joueur.h"
+#include "collision.h"
 #include "gameplay.h"
+#include "joueur.h"
 #include "../affichage/affichage.h"
 #include "../affichage/console.h"
 #include "../map/map.h"
 #include "../moteur/frames.h"
 #include "../moteur/logger.h"
-#include "collision.h"
+#include "../main.h"
 
 const int MOUV_X = 0;
 const int MOUV_Y = 1;
 
 const float V_MAX = 9;
 const float VY_MAX = 15;
-
-
 
 // crée un nouveau mouvement avec un vecteur vitesse de composantes vx et vy
 void ajouterVitesse(joueur *j, float valeur, int type)
@@ -116,8 +115,8 @@ void nouveauX(joueur *j){
 }
 
 
-// actualise tout les mouvement dans le jeu
-void actualisation(joueur *j, map instanceMap)
+//Actualise tous les mouvements dans le jeu
+void actualisationMouvements(joueur *j, map instanceMap)
 {
     checkCollision(j, instanceMap);
 
@@ -134,8 +133,6 @@ void actualisation(joueur *j, map instanceMap)
 
     j->position.x = round(j->positionPrecise.x);
     j->position.y = round(j->positionPrecise.y);
-
-    
 
     char msg[100];
     sprintf(msg, "dx: %f, dy: %f", j->deltaPos.x, j->deltaPos.y);
@@ -171,4 +168,35 @@ void mouvGauche(joueur* j)
     char msg[100];
     sprintf(msg, "vx %f", j->vitesseX.valeur);
     newLog(msg);
+}
+
+void victoireJoueur(joueur* j)
+{
+    afficherMsgVictoire();
+
+    //On attend une entrée utilisateur pour recommencer à jouer ou quitter le jeu
+    nodelay(stdscr, false);
+    int input = getch();
+
+    if(input == '\n')
+    {
+        *j = initJoueurSpawn();
+        nodelay(stdscr, true);
+    }
+    else
+    {
+        arretJeu();
+    }
+}
+
+void mortJoueur(joueur* j)
+{
+    afficherMsgMort();
+
+    //On attend une entrée utilisateur pour recommencer à jouer
+    nodelay(stdscr, false);
+    getch();
+
+    *j = initJoueurSpawn();
+    nodelay(stdscr, true);
 }

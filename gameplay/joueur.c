@@ -3,14 +3,24 @@
 #include "joueur.h"
 #include "../affichage/console.h"
 
-//Initialise un joueur aux positions (x, y)
-joueur initJoueur(int x, int y)
+int spawn_x = 0;
+int spawn_y = 0;
+
+//Définit les coordonées du spawn
+void defSpawn(int x, int y)
+{
+    spawn_x = x;
+    spawn_y = y;
+}
+
+//Initialise un joueur aux coordonnées du spawn
+joueur initJoueurSpawn()
 {
     joueur j;
-    j.position.x = x;
-    j.position.y = y;
-    j.positionPrecise.x = (float) x;
-    j.positionPrecise.y = (float) y;
+    j.position.x = spawn_x;
+    j.position.y = spawn_y;
+    j.positionPrecise.x = (float) spawn_x;
+    j.positionPrecise.y = (float) spawn_y;
     j.deltaPos.x = 0.0;
     j.deltaPos.y = 0.0;
     

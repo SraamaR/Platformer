@@ -15,71 +15,67 @@
 #include "moteur/input.h"
 #include "gameplay/joueur.h"
 
-int main() 
+//Cette variable est vraie tant que le jeu est en marche
+bool enCours = true;
+
+int main()
 {
-    //Declaration variables
-    bool enCours = true;
-    map instanceMap;
+    initCurses();
     
-    //Coordonées du point d'apparition
-    int spawn_x = 0;
-    int spawn_y = 0;
+    //Le menu est affiché jusqu'à que le joueur presse une touche
+    afficherMenu();
+    getch();
 
-    //Initialise l'affichage et la console
-    initscr();
-    start_color();
-    curs_set(0); //Curseur invisible
+    //On débute l'initialisation du jeu en effaçant le menu
+    clear();
 
+    //Initialise l'affichage du jeu et la console
     if(DEVMODE)
     {
         initConsole();
         initLogFile();
     }
+    initAffichageJeu();
 
-    initAffichage();
-
-    // Initialise le compteur de frames
+    //Initialise le compteur de frames
     initFrames(TARGET_FPS);
 
     //Initialise la map
+    map instanceMap;
     instanceMap = chargementMap();
     
-    //Initialise un joueur
+    //Initialise le joueur
+    int spawn_x = 0;
+    int spawn_y = 0;
     posSpawnJoueur(&spawn_x, &spawn_y, instanceMap);
-    joueur j = initJoueur(spawn_x, spawn_y);
+    defSpawn(spawn_x, spawn_y);
+    joueur j = initJoueurSpawn();
 
-    // stocke l'entrée utilisateur
-    int input;
-
-    // transforme getch en appel non-bloquant
+    //Transforme getch en appel non-bloquant
     nodelay(stdscr, true);
 
-    // autorise l'utilisation des flèches
+    //Autorise l'utilisation des flèches
     keypad(stdscr, true);
 
-    // variable compteur (compte le temps nécessaire au calculs et à l'affichage)
+    //Variable compteur (compte le temps nécessaire au calculs et à l'affichage)
     clock_t start, end;
 
     while (enCours) 
     {
         start = clock();    // compteur de début
 
-        actualisation(&j, instanceMap);
+        actualisationMouvements(&j, instanceMap);
 
-        affichage(j, instanceMap);
+        affichageJeu(j, instanceMap);
 
-        input = getch();
-
-        inputControle(input, &enCours, &j); // gère l'entrée utilisateur
+        //Envoi puis traitement de l'entrée utilisateur
+        inputControle(getch(), &enCours, &j);
 
         end = clock();  // compteur de fin
 
         napms(ecartFrameMs - 1000 * (float)(end - start) / CLOCKS_PER_SEC); // attends le temps entre deux frames (moins le temps nécessaire au traitement)
         frameSuivante();
     }
-    
-    nodelay(stdscr, false);
-    getch();
 
     //Arret du jeu
     if(DEVMODE)
@@ -92,4 +88,10 @@ int main()
     endwin();
 
     return 0;
+}
+
+void arretJeu()
+{
+    afficherMessageConsole("Arrêt du jeu...", INFOMSG);
+    enCours = false;
 }
