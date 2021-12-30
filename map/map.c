@@ -1,7 +1,7 @@
+//#include <ncurses.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <ncurses.h>
 
 #include "../affichage/console.h"
 #include "./map.h"
@@ -24,22 +24,29 @@ const char CHAR_PIQUEBAS = '^';
 const char COLLISION = 'a';
 const char PAS_COLLISION = ' ';
 
+//Libère la mémoire occupée par les tableaux
 void libererMemoireMap(map instanceMap)
 {
-    //On libère chaque ligne
+    //On libère la mémoire pour chaque colonne
     for(int i = 0; i < instanceMap.x; i++)
     {
         free(instanceMap.ptr_map[i]);
         free(instanceMap.collision_map[i]);
     }
+    //On libère la mémoire pour la première ligne
     free(instanceMap.ptr_map);
     free(instanceMap.collision_map);
+
+    return;
 }
 
+/* Renvoie un tableau vide de dimensions (x, y)
+Renvoie NULL si une erreur d'allocation mémoire est rencontrée */
 char** initTableau(int x, int y)
 {
     char** ptr_map = NULL;
 
+    //Réservation pour la première ligne du tableau
     ptr_map = malloc(x * sizeof(char*));
 
     if(ptr_map == NULL)
@@ -48,10 +55,11 @@ char** initTableau(int x, int y)
         return NULL;
     }
     
+    //Réservation pour chaque colonne du tableau
     for(int i = 0; i < x; i++)
     {
-        //Réservation pour chaque colonne du tableau
         ptr_map[i] = malloc(y * sizeof(char));
+
         if(ptr_map[i] == NULL)
         {
             afficherMessageConsole("Erreur d'allocation memoire colonne", ERRMSG);
@@ -71,31 +79,33 @@ char** initTableau(int x, int y)
     return ptr_map;
 }
 
-void tailleMap(FILE* fichierMap, map instanceMap, int* x, int* y)
+//Renvoie les dimensions de la carte
+void tailleMap(FILE* fichierMap, int* x, int* y)
 {
+    //Stocke la première ligne
     char ligne[LONGUEUR_MAX_MAP];
+    fgets(ligne, LONGUEUR_MAX_MAP, fichierMap);
+
     int longueurLignes = 0;
     int nbreLignes = 0;
 
-    //On verifie si la ligne commence par + et on commence à la lire
-    fgets(ligne, LONGUEUR_MAX_MAP, fichierMap);
-    if(ligne[0] == CHAR_BORD) //On verifie si la ligne commence par + et on commence à la lire
+    /* On compte la longueur des lignes de la carte
+    en comptant le nombre de charactères bord de la premère ligne */
+    for(int i = 0; i < LONGUEUR_MAX_MAP; i++)
     {
-        for(int i = 0; i < LONGUEUR_MAX_MAP; i++)
+        if(ligne[i] == CHAR_BORD)
         {
-            if(ligne[i] != CHAR_BORD)
-            {
-                longueurLignes = i;
-                break;
-            }
+            longueurLignes++;
         }
     }
 
-    char c = ' ';
+    char c = CHAR_VIDE;
     char c_precedent = c;
+
     //On place le curseur à la position 0
     fseek(fichierMap, 0, SEEK_SET);
 
+    //On incrémente le nombre de lignes à chaque fois qu'on trouve un saut de ligne
     while(c != EOF)
     {
         c_precedent = c;
@@ -106,7 +116,9 @@ void tailleMap(FILE* fichierMap, map instanceMap, int* x, int* y)
         }
     }
 
-    //Si le dernier char du texte n'est pas un saut de ligne on corrige le nb de lignes
+    /* Si le dernier char du texte n'est pas un saut de ligne on corrige le nombre de lignes
+    Cela permet de d'éviter d'avoir un nombre de lignes trop petit dans le cas où il n'y a pas
+    de saut de ligne à la fin du fichier texte */
     if(c_precedent == CHAR_BORD)
     {
         nbreLignes++;
@@ -114,9 +126,11 @@ void tailleMap(FILE* fichierMap, map instanceMap, int* x, int* y)
 
     *x = longueurLignes;
     *y = nbreLignes;
+
+    return;
 }
 
-//Renvoie true si le format de la map dans le fichier .txt est valide
+//Renvoie true si le format de la carte dans le fichier .txt est valide
 bool verifFormat(FILE* fichierMap, map instanceMap)
 {
     //La longueur ne peut pas depasser LONGUEUR_MAX_MAP en raison du fonctionnement de fgets pas besoin de vérifier donc
@@ -147,7 +161,7 @@ bool verifFormat(FILE* fichierMap, map instanceMap)
         }
     }
 
-    //Verif du spawn
+    //On compte le nombre de charactères spawn de la carte
     int nbreSpawn = 0;
     for(int i = 0; i < instanceMap.x; i++)
     {
@@ -164,9 +178,8 @@ bool verifFormat(FILE* fichierMap, map instanceMap)
     {
         afficherMessageConsole("Aucun point d'apparition trouve", ERRMSG);
         return false;
-    }
-
-    if(nbreSpawn > 1)
+    } 
+    else if(nbreSpawn > 1)
     {
         afficherMessageConsole("Plusieurs points d'apparition trouves", ERRMSG);
         return false;
@@ -175,12 +188,14 @@ bool verifFormat(FILE* fichierMap, map instanceMap)
     return true;
 }
 
+/* Lit un fichier texte puis renvoie ses données sous la forme d'un struct map lisible par le jeu */
 map chargementMap()
 {
     FILE* fichierMap = NULL;
     map instanceMap;
     instanceMap.ptr_map = NULL;
 
+    //Ouverture du fichier texte
     fichierMap = fopen("map/map.txt", "r");
     if(fichierMap == NULL)
     {
@@ -189,7 +204,8 @@ map chargementMap()
         exit(1);
     }
 
-    tailleMap(fichierMap, instanceMap, &(instanceMap.x), &(instanceMap.y));
+    //Calcul de la taille de la carte à partir du fichier texte
+    tailleMap(fichierMap, &(instanceMap.x), &(instanceMap.y));
 
     instanceMap.ptr_map = initTableau(instanceMap.x, instanceMap.y);
     instanceMap.collision_map = initTableau(instanceMap.x, instanceMap.y);
@@ -237,7 +253,8 @@ map chargementMap()
     return instanceMap;
 }
 
-//Renvoie les coordonées du point d'apparition
+/* Renvoie les coordonées du point d'apparition du joueur 
+puis supprime le charactère spawn de la carte envoyée en argument */
 void posSpawnJoueur(int* x, int* y, map instanceMap)
 {
     for(int i = 0; i < instanceMap.x; i++)
@@ -248,6 +265,9 @@ void posSpawnJoueur(int* x, int* y, map instanceMap)
             {
                 *x = i;
                 *y = j;
+
+                /* On remplace le charactère du point d'appartion par un vide
+                après avoir stocké ces coordonées */
                 instanceMap.ptr_map[i][j] = CHAR_VIDE;
                 return;
             }
