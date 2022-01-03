@@ -4,6 +4,7 @@
 #include "../moteur/frames.h"
 #include <stdbool.h>
 #include "../moteur/logger.h"
+#include "./gameplay.h"
 #include <stdio.h>
 
 const int HIGH = 0;
@@ -67,23 +68,41 @@ bool verifierCollisionY(joueur *j, map instanceMap){
     
     char suivant = instanceMap.collision_map[j->position.x][j->position.y - 1];
     char precedent = instanceMap.collision_map[j->position.x][j->position.y + 1];
-
-    
+    char objSuivant = instanceMap.ptr_map[j->position.x][j->position.y - 1];
+    char objPrecedent = instanceMap.ptr_map[j->position.x][j->position.y + 1];
 
     char msg[100];
 
     sprintf(msg, "sens : %d", sens);
     newLog(msg);
 
-    if (suivant == COLLISION && sens == 1) {
-        arreterMouvementY(j, HIGH);
-        return true;
+    if(sens == 1){
+
+        if (objSuivant == CHAR_PIQUEHAUT) {
+            mortJoueur(j);
+        }
+
+        if (suivant == COLLISION) {
+            arreterMouvementY(j, HIGH);
+            return true;
+        }
+
     }
 
-    if (precedent == COLLISION && sens == -1) {
-        arreterMouvementY(j, LOW);
-        return true;
+    if(sens == -1){
+
+        if (objPrecedent == CHAR_PIQUEBAS) {
+            mortJoueur(j);
+        }
+
+        if (precedent == COLLISION) {
+            arreterMouvementY(j, LOW);
+            return true;
+        }
+
     }
+
+    
 
     if (sens == 0) {
 
@@ -132,19 +151,27 @@ bool verifierCollisionX(joueur *j, map instanceMap){
     
     char suivant = instanceMap.collision_map[j->position.x + 1][j->position.y];
     char precedent = instanceMap.collision_map[j->position.x - 1][j->position.y];
+    char objSuivant = instanceMap.ptr_map[j->position.x + 1][j->position.y];
+    char objPrecedent = instanceMap.ptr_map[j->position.x - 1][j->position.y];
 
     if (sens == 1) {
+
+        if (objSuivant == CHAR_PIQUEDROITE) {
+            mortJoueur(j);
+        }
 
         if (suivant == COLLISION) {
 
             arreterMouvementX(j);
             return true;
         }
-
-
     }
 
     if (sens == -1){
+
+        if(objPrecedent == CHAR_PIQUEGAUCHE) {
+            mortJoueur(j);
+        }
     
         if (precedent == COLLISION) {
             arreterMouvementX(j);

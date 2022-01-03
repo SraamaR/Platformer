@@ -182,15 +182,18 @@ void victoireJoueur(joueur* j)
     afficherMsgVictoire();
 
     //On attend une entrée utilisateur pour recommencer à jouer ou quitter le jeu
+    int input;
     nodelay(stdscr, false);
-    int input = getch();
+    do {
+        input = getch();
+    } while(input != '\n' && input != 27);
 
     if(input == '\n')
     {
         *j = initJoueurSpawn();
         nodelay(stdscr, true);
     }
-    else
+    else if(input == 27)
     {
         arretJeu();
     }
@@ -201,9 +204,20 @@ void mortJoueur(joueur* j)
     afficherMsgMort();
 
     //On attend une entrée utilisateur pour recommencer à jouer
+    int input;
     nodelay(stdscr, false);
-    getch();
+    do {
+        input = getch();
+    } while(input != '\n' && input != 27);
 
-    *j = initJoueurSpawn();
+    if(input == '\n')
+    {
+        *j = initJoueurSpawn();
+        nodelay(stdscr, true);
+    }
+    else if(input == 27)
+    {
+        arretJeu();
+    }
     nodelay(stdscr, true);
 }

@@ -47,6 +47,7 @@ int main()
     //Initialise le joueur
     int spawn_x = 0;
     int spawn_y = 0;
+    int x_fin = posFin(instanceMap);
     posSpawnJoueur(&spawn_x, &spawn_y, instanceMap);
     defSpawn(spawn_x, spawn_y);
     joueur j = initJoueurSpawn();
@@ -70,6 +71,10 @@ int main()
 
         // Envoi puis traitement de l'entrée utilisateur
         inputControle(getch(), &enCours, &j);
+
+        if (j.position.x >= x_fin) {
+            victoireJoueur(&j);
+        }
 
         end = clock();  // compteur de fin
 

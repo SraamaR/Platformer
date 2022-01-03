@@ -25,10 +25,14 @@ void inputControle(int entree, bool *enCours, joueur *j) {
             break;
         //Tests
         case 'f':
-            mortJoueur(j);
+            if(consoleActive){
+                mortJoueur(j);
+            }
             break;
         case 'v':
-            victoireJoueur(j);
+            if (consoleActive){
+                victoireJoueur(j);
+            }
             break;
         default:
             break;

@@ -20,6 +20,9 @@ const char CHAR_COIN = '+';
 const char CHAR_PLATFORME = '-';
 const char CHAR_PIQUEHAUT = 'v';
 const char CHAR_PIQUEBAS = '^';
+const char CHAR_PIQUEDROITE = '<';
+const char CHAR_PIQUEGAUCHE = '>';
+const char CHAR_FIN = '\\';
 
 const char COLLISION = 'a';
 const char PAS_COLLISION = ' ';
@@ -227,7 +230,7 @@ map chargementMap()
 
             instanceMap.ptr_map[i][j] = courant;
 
-            if (courant == ' ' || courant == '%') {
+            if (courant == ' ' || courant == '%' || courant == CHAR_FIN) {
                 instanceMap.collision_map[i][j] = PAS_COLLISION;
             } else {
                 instanceMap.collision_map[i][j] = COLLISION;
@@ -273,4 +276,20 @@ void posSpawnJoueur(int* x, int* y, map instanceMap)
             }
         }
     }
+}
+
+int posFin(map instanceMap){
+    for(int i = 0; i < instanceMap.x; i++)
+    {
+        for(int j = 0; j < instanceMap.y; j++)
+        {
+            if(instanceMap.ptr_map[i][j] == CHAR_FIN)
+            {                /* On remplace le charactère du point d'appartion par un vide
+                après avoir stocké ces coordonées */
+                instanceMap.ptr_map[i][j] = CHAR_VIDE;
+                return i;
+            }
+        }
+    }
+    return instanceMap.x -2;
 }

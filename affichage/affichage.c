@@ -269,7 +269,7 @@ void afficherMsgVictoire()
 {
     mvprintw(LINES/2 - 1, COLS/2 - 13, "Bravo ! Vous avez gagne !"); 
     mvprintw(LINES/2, COLS/2 - 18, "Appuyez sur Entree pour recommencer"); 
-    mvprintw(LINES/2 + 1, COLS/2 - 24, "Appuyez sur une autre touche pour quitter le jeu"); 
+    mvprintw(LINES/2 + 1, COLS/2 - 18, "Appuyez sur ECHAP pour quitter le jeu"); 
 }
 
 
@@ -277,7 +277,7 @@ void afficherMsgVictoire()
 void afficherMsgMort()
 {
     mvprintw(LINES/2, COLS/2 - 8, "Vous etes mort !"); 
-    mvprintw(LINES/2 + 1, COLS/2 - 20, "Appuyez sur une touche pour reessayer !");
+    mvprintw(LINES/2 + 1, COLS/2 - 17, "Appuyez sur Entree pour reessayer !");
 }
 
 

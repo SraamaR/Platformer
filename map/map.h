@@ -5,6 +5,10 @@ extern const char CHAR_BORD;
 extern const char CHAR_SPAWN;
 extern const char CHAR_VIDE;
 extern const char CHAR_PLATFORME;
+extern const char CHAR_PIQUEDROITE;
+extern const char CHAR_PIQUEGAUCHE;
+extern const char CHAR_PIQUEHAUT;
+extern const char CHAR_PIQUEBAS;
 
 extern const char COLLISION;
 extern const char PAS_COLLISION; 
@@ -21,5 +25,7 @@ map chargementMap();
 void posSpawnJoueur(int* x, int* y, map instanceMap);
 
 void libererMemoireMap(map instanceMap);
+
+int posFin(map instanceMap);
 
 #endif
