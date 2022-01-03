@@ -13,3 +13,4 @@ vgcore*
 rapport/*
 !rapport/rapport.tex
 !rapport/rapport.pdf
+!rapport/content/

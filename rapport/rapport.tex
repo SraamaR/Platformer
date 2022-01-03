@@ -7,6 +7,9 @@
 \usepackage{pgfpages}
 \usepackage{fullpage}
 \usepackage[unicode,psdextra]{hyperref}
+\usepackage{graphics}
+\usepackage{float}
+\usepackage{fancyvrb}
 
 \lstdefinestyle{codeblock}{
 	keywordstyle=\color{magenta},
@@ -29,20 +32,58 @@
 	urlcolor=black
 }
 
-\title{Rapport de projet : Platformer}
+\title{Rapport de projet}
 
 \begin{document}
 \maketitle
+\begin{figure}[H]
+	\centering
+	\begin{BVerbatim}
+ _____  ______                               
+|  __ \|  ____|                             
+| |__) | |__ ___  _ __ _ __ ___   ___ _ __   
+|  ___/|  __/ _ \| '__| '_ ` _ \ / _ | '__|
+| |    | | | (_) | |  | | | | | |  __| |     
+|_|    |_|  \___/|_|  |_| |_| |_|\___|_|   
+	\end{BVerbatim}
+\end{figure}
 \tableofcontents
 \newpage
 
 \section{Introduction}
 
-\section{title}
+\begin{center}
+	\includegraphics[width=0.90\textwidth]{content/image.png}
+\end{center}
+
+Platformer est un jeu de plateforme, où le but est d'arriver au bout d'une carte après de multiple obstacles. Ce jeu se rapproche de Mario Bros.
+
+Le jeu est programmé en \textbf{C} et s'utilise dans une console (similaire a MS-DOS).
+
+\section{Problèmes recontrés}
+
+	\subsection{Chargement de la carte}
+	
+	\subsection{Physique et mouvement}
+	
+	\subsection{Affichage}
+	
+	\subsection{Collisions}
+	
+	
 	\begin{lstlisting}[language=C, title={Programme en C}]
 		int test;
 	\end{lstlisting}
 
 \section{Conclusion}
+
+Parmi les idées qui auraient pû améliorer le jeu, nous avons retenu :
+\begin{itemize}
+	\item Un menu pour choisir la carte
+	\item Des adversaires automatiques
+	\item Des couleurs
+	\item Éventuellement, un outil pour créer d'autres cartes (ou un guide)
+	\item \dots
+\end{itemize}
 	
 \end{document}
