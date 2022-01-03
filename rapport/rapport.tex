@@ -1,9 +1,12 @@
 \documentclass[12pt]{article}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
 \usepackage{listings}
 \usepackage{amsmath,amsthm,amssymb,amsfonts}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{pgfpages}
 \usepackage{fullpage}
+\usepackage[unicode,psdextra]{hyperref}
 
 \lstdefinestyle{codeblock}{
 	keywordstyle=\color{magenta},
@@ -18,13 +21,28 @@
 }
 \lstset{style=codeblock}
 
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+
 \title{Rapport de projet : Platformer}
 
 \begin{document}
 \maketitle
+\tableofcontents
+\newpage
 
+\section{Introduction}
+
+\section{title}
 	\begin{lstlisting}[language=C, title={Programme en C}]
 		int test;
 	\end{lstlisting}
+
+\section{Conclusion}
 	
 \end{document}

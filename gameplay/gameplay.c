@@ -118,23 +118,30 @@ void nouveauX(joueur *j){
 //Actualise tous les mouvements dans le jeu
 void actualisationMouvements(joueur *j, map instanceMap)
 {
-    checkCollision(j, instanceMap);
-
-    j->deltaPos.x = -j->positionPrecise.x; // on fait p(t+1) - p(t), on rentre uniquement -p(t) ici
-    j->deltaPos.y = j->positionPrecise.y; // de même mais l'autre signe (y décroissants)
-
-    j->positionPrecise.y -= valeurVitesse(j->vitesseY);
-    j->positionPrecise.y -= valeurAcceleration(j->accelY);
-
-    nouveauX(j);
-
-    j->deltaPos.x += j->positionPrecise.x;
-    j->deltaPos.y -= j->positionPrecise.y;
-
-    j->position.x = round(j->positionPrecise.x);
-    j->position.y = round(j->positionPrecise.y);
-
+    vecteur nvDelta;
+    nvDelta.y = j->positionPrecise.y;
+    nvDelta.x = -j->positionPrecise.x;
     char msg[100];
+
+    sprintf(msg, "collision : %d", verifierCollisionY(j, instanceMap));
+    newLog(msg);
+
+    if (!verifierCollisionY(j, instanceMap)) {
+        j->positionPrecise.y -= valeurAcceleration(j->accelY);
+        j->positionPrecise.y -= valeurVitesse(j->vitesseY);
+        j->position.y = round(j->positionPrecise.y);
+    }
+
+    if(!verifierCollisionX(j, instanceMap)){
+        nouveauX(j);
+        j->position.x = round(j->positionPrecise.x);
+    }
+
+    nvDelta.y -= j->positionPrecise.y;
+    nvDelta.x += j->positionPrecise.x;
+
+    j->deltaPos = nvDelta;
+    
     sprintf(msg, "dx: %f, dy: %f", j->deltaPos.x, j->deltaPos.y);
     newLog(msg);
 

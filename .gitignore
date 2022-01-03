@@ -10,6 +10,6 @@ log.txt
 
 vgcore*
 
-rapport/rapport.aux
-rapport/rapport.log
-rapport/rapport.syn*
+rapport/*
+!rapport/rapport.tex
+!rapport/rapport.pdf

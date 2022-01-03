@@ -8,133 +8,166 @@
 
 const int HIGH = 0;
 const int LOW = 1;
+const int EMPTY = 2;
 
-bool verifierPasDepassementX(joueur *j, map instanceMap) {
 
-    if (j->position.x + 1 >= instanceMap.x || j->position.x - 1 <= 0) {
-
-        return false;
-
-    } else {
-
-        return true;
-
-    }
-
-}
-
-bool verifierPasDepassementY(joueur *j, map instanceMap) {
-
-    if (j->position.y + 1 >= instanceMap.y || j->position.y - 1 <= 0) {
-
-        return false;
-
-    } else {
-    
-        return true;
-
-    }
-}
-
-void resetMouvementX(joueur *j) {
-
-    j->accelX.valeur = 0.0;
-    j->vitesseX.valeur = 0.0;
-
-    return;
-
-}
-
-void resetMouvementY(joueur *j, int type) {
-
-    j->vitesseY.valeur = 0.0;
+void arreterMouvementY(joueur *j, int type) {
 
     if (type == LOW) {
 
         j->accelY.valeur = 0.0;
+        j->accelY.tempsModif = compteurFrame;
+
+        j->vitesseY.valeur = 0.0;
+
+        return;
 
     } else {
 
         j->accelY.valeur = -g;
-        //j->accelY.tempsModif = compteurFrame;
+        j->accelY.tempsModif = compteurFrame;
 
+        j->vitesseY.valeur = 0.0;
+
+        return;
     }
-
-    return;
 
 }
 
-void checkCollision(joueur *j, map instanceMap) {
+void arreterMouvementX(joueur *j) {
 
+    j->accelX.valeur = 0.0;
+    j->accelX.tempsModif = 0.0;
 
-    // Cas de bords de map
+    j->vitesseX.valeur = 0.0;
 
-    if (!verifierPasDepassementX(j, instanceMap)) {
+}
 
-        resetMouvementX(j);
+bool verifierCollisionY(joueur *j, map instanceMap){
 
-        return;
+    int sens = 0;
 
-    } 
-
-    if (!verifierPasDepassementY(j, instanceMap)) {
-
-        if (j->position.y <= 1) {
-            
-            resetMouvementY(j, HIGH); // cas ou le joueur est au sol 
-
-        } else {
-
-            resetMouvementY(j, LOW); // cas ou le joueur est au plafond
-
-        }
-
-        return;
-        
+    if (j->deltaPos.y == 0.0) {
+        sens = 0;
+    } else if (j->deltaPos.y < 0.0) {
+        sens = -1;
+    } else {
+        sens = 1;
     }
 
-    int posX = j->position.x;
-    int posY = j->position.y;
-
-
-
-    if (j->deltaPos.x > 0 && instanceMap.collision_map[posX + 1][posY] == COLLISION) {
-
-        resetMouvementX(j);
-        newLog("collision x+");
-
+    if (j->position.y < 2 && sens == 1){
+        arreterMouvementY(j, HIGH);
+        return true;
     }
 
-    if (j->deltaPos.x < 0 && instanceMap.collision_map[posX - 1][posY] == COLLISION) {
-
-        resetMouvementX(j);
-
-        char msg[100];
-        sprintf(msg, "collision- \"%c\"", instanceMap.collision_map[posX - 1][posY]);
-        newLog(msg);
-
-    }
-
-
-
-    if (j->deltaPos.y < 0.0 && instanceMap.collision_map[posX][posY + 1] == COLLISION) {
-
-        resetMouvementY(j, LOW);
-
+    if (j->position.y > instanceMap.y  - 2){
+        arreterMouvementY(j, LOW);
+        return true;
     }
     
-    if (j->deltaPos.y > 0.0 && instanceMap.collision_map[posX][posY - 1] == COLLISION) {
+    char suivant = instanceMap.collision_map[j->position.x][j->position.y - 1];
+    char precedent = instanceMap.collision_map[j->position.x][j->position.y + 1];
 
-        resetMouvementY(j, HIGH);
+    
+
+    char msg[100];
+
+    sprintf(msg, "sens : %d", sens);
+    newLog(msg);
+
+    if (suivant == COLLISION && sens == 1) {
+        arreterMouvementY(j, HIGH);
+        return true;
+    }
+
+    if (precedent == COLLISION && sens == -1) {
+        arreterMouvementY(j, LOW);
+        return true;
+    }
+
+    if (sens == 0) {
+
+        if (j->vitesseY.valeur > 0.0 && suivant == COLLISION) {
+            arreterMouvementY(j, LOW);
+            return true;
+        }
+
+        if (precedent != COLLISION && j->accelY.valeur > -g){
+            j->accelY.valeur = -g;
+            j->accelY.tempsModif = compteurFrame;
+            return false;
+        }
 
     }
 
-    if (j->deltaPos.y <= 0 && instanceMap.collision_map[posX][posY + 1] == PAS_COLLISION) {
+    
 
-        resetMouvementY(j, HIGH);
+    
+
+    return false;
+
+}
+
+bool verifierCollisionX(joueur *j, map instanceMap){
+
+    int sens = 0;
+
+    if (j->deltaPos.x == 0.0) {
+        sens = 0;
+    } else if (j->deltaPos.x < 0.0) {
+        sens = -1;
+    } else {
+        sens = 1;
+    }
+
+    if (j->position.x < 2 && sens == -1){
+        arreterMouvementX(j);
+        return true;
+    }
+
+    if (j->position.x > instanceMap.x - 2){
+        arreterMouvementX(j);
+        return true;
+    }
+    
+    char suivant = instanceMap.collision_map[j->position.x + 1][j->position.y];
+    char precedent = instanceMap.collision_map[j->position.x - 1][j->position.y];
+
+    if (sens == 1) {
+
+        if (suivant == COLLISION) {
+
+            arreterMouvementX(j);
+            return true;
+        }
+
 
     }
 
-    return;
+    if (sens == -1){
+    
+        if (precedent == COLLISION) {
+            arreterMouvementX(j);
+            return true;
+        }
+    }
+
+    if (sens == 0) {
+
+        if(j->vitesseX.valeur < 0 && precedent == COLLISION) {
+            arreterMouvementX(j);
+            return true;
+        }
+
+        if(j->vitesseX.valeur > 0 && suivant == COLLISION) {
+            arreterMouvementX(j);
+            return true;
+        }
+
+    }
+
+    
+
+    return false;
 
 }

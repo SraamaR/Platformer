@@ -3,7 +3,10 @@
 
 #include "joueur.h"
 #include "../map/map.h"
+#include <stdbool.h>
 
-void checkCollision(joueur *j, map instanceMap);
+bool verifierCollisionY(joueur *j, map instanceMap);
+
+bool verifierCollisionX(joueur *j, map instanceMap);
 
 #endif
