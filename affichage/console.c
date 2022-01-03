@@ -63,7 +63,7 @@ void afficherMessageConsole(char* str, int msgType)
     werase(console);
 
 
-    for (int i = 0; i < ligneDernierMsg; i++)
+    for (int i = 0; i < nbLigneConsole; i++)
     {
         wattron(console, COLOR_PAIR(messageList[i].messageType));
         wprintw(console, "%d : %s", messageList[i].timeFrame, messageList[i].msg);

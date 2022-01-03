@@ -68,7 +68,7 @@ int main()
 
         affichageJeu(j, instanceMap);
 
-        //Envoi puis traitement de l'entrée utilisateur
+        // Envoi puis traitement de l'entrée utilisateur
         inputControle(getch(), &enCours, &j);
 
         end = clock();  // compteur de fin

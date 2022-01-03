@@ -9,9 +9,11 @@
 WINDOW* titre;
 WINDOW* jeu;
 
+
 int nbColonneTerminal, nbLigneTerminal;
 int jxMax, jyMax;
 int txMax, tyMax;
+
 
 typedef struct s_camera {
     int centrex;
@@ -19,6 +21,7 @@ typedef struct s_camera {
     int longueur;
     int largeur;
 } camera;
+
 
 const char logo[] = 
 "  _____  ______                               \n"
@@ -29,15 +32,18 @@ const char logo[] =
 " |_|    |_|  \\___/|_|  |_| |_| |_|\\___|_|   \n"
 ;
 
+
 /* Initialise la bibliotèque NCurses */
 void initCurses()
 {
     initscr();
     start_color();
-    noecho(); //Permet de ne pas afficher l'entrée utilisateur
-    curs_set(0); //Curseur invisible
+    noecho(); // Permet de ne pas afficher l'entrée utilisateur
+    curs_set(0); // Curseur invisible
 }
 
+
+/* Affiche le menu */
 void afficherMenu()
 {   
     printw(logo);
@@ -47,6 +53,45 @@ void afficherMenu()
     mvprintw(LINES - 2, 1, "Saut : Fleche Haut ou Barre Espace");
     mvprintw(LINES - 1, 1, "Quitter le jeu : Touche Echap");
 }
+
+
+/* Initialise l'affichage */
+void initAffichageJeu()
+{
+    nbColonneTerminal = COLS;
+    nbLigneTerminal = LINES;
+
+    // création des fenêtres
+    //DEVMODE
+    if (consoleActive)
+    {
+        titre = subwin(stdscr, 3, nbColonneTerminal,  0, 0);
+        init_pair(consoleActive, COLOR_CYAN, COLOR_BLACK);
+        wattron(titre, COLOR_PAIR(consoleActive));
+        
+        jeu = subwin(stdscr, nbLigneTerminal-3-nbLigneConsole, nbColonneTerminal, 3+nbLigneConsole, 0);
+    }
+    
+    else
+    {
+        titre = subwin(stdscr, 3, nbColonneTerminal,  0, 0);
+        jeu = subwin(stdscr, nbLigneTerminal-3, nbColonneTerminal, 3, 0);
+    }
+
+    // initialisation titre
+    getmaxyx(titre, tyMax, txMax);
+    
+    box(titre, ACS_VLINE, ACS_HLINE);
+    mvwprintw(titre, 1, (txMax/2)-4, "Platformer");
+
+    // initialisation jeu
+    getmaxyx(jeu, jyMax, jxMax);
+
+
+    afficherMessageConsole("Initialisation de l'affichage effectuee", INFOMSG);
+    return;
+}
+
 
 /* Redimensionne les différentes fenêtres */
 void redimensionnerFenetre() 
@@ -92,7 +137,7 @@ void positionnerCamera(camera* cam, joueur* j, map* instanceMap)
     }
     else 
     {
-        cam->centrex = j->position.x;
+        cam->centrex = j->position.x; // par défaut centré sur le joueur
     }
     
     // axe y
@@ -106,46 +151,12 @@ void positionnerCamera(camera* cam, joueur* j, map* instanceMap)
     }
     else 
     {
-        cam->centrey = j->position.y;
+        cam->centrey = j->position.y; // par défaut centré sur le joueur
     }
 
     return;
 }
 
-/* Initialise l'affichage */
-void initAffichageJeu()
-{
-    nbColonneTerminal = COLS;
-    nbLigneTerminal = LINES;
-
-    //DEVMODE
-    if (consoleActive)
-    {
-        titre = subwin(stdscr, 3, nbColonneTerminal,  0, 0);
-        init_pair(consoleActive, COLOR_CYAN, COLOR_BLACK);
-        wattron(titre, COLOR_PAIR(consoleActive));
-        
-        jeu = subwin(stdscr, nbLigneTerminal-3-nbLigneConsole, nbColonneTerminal, 3+nbLigneConsole, 0);
-    }
-    
-    else
-    {
-        titre = subwin(stdscr, 3, nbColonneTerminal,  0, 0);
-        jeu = subwin(stdscr, nbLigneTerminal-3, nbColonneTerminal, 3, 0);
-    }
-
-    // titre
-    getmaxyx(titre, tyMax, txMax);
-    
-    box(titre, ACS_VLINE, ACS_HLINE);
-    mvwprintw(titre, 1, (txMax/2)-4, "Platformer");
-
-    //jeu
-    getmaxyx(jeu, jyMax, jxMax);
-
-    afficherMessageConsole("Initialisation de l'affichage effectuee", INFOMSG);
-    return;
-}
 
 /* Affiche le jeu */
 void affichageJeu(joueur j, map instanceMap) 
@@ -170,7 +181,6 @@ void affichageJeu(joueur j, map instanceMap)
         afficherMessageConsole("Nouveau redimensionnement fenetre", INFOMSG);
     }
 
-
     // définition de la camera
     camera cam;
     
@@ -188,6 +198,10 @@ void affichageJeu(joueur j, map instanceMap)
     
     positionnerCamera(&cam, &j, &instanceMap);
 
+    /* Tests
+    mvwprintw(titre, 1, 1, "cam : %d ; %d  |  joueur : %d ; %d  |  Lmap : %d ; %d  |  Lcam : %d ; %d  |  Lterm : %d ; %d", 
+    cam.centrex, cam.centrey, j.position.x, j.position.y, instanceMap.x, instanceMap.y, cam.longueur, cam.largeur, nbColonneTerminal, nbLigneTerminal);
+    wrefresh(titre); */
 
     // affichage du jeu
     int jx;
@@ -199,13 +213,14 @@ void affichageJeu(joueur j, map instanceMap)
         
         for (int x = cam.centrex-(cam.longueur/2); x < cam.centrex+(cam.longueur/2); x++) 
         {
-            if (x == j.position.x && y == j.position.y) 
+            // affichage du joueur
+            if (x == j.position.x && y == j.position.y)
             {
                 mvwprintw(jeu, jy, jx, "&");
             }
             
-            //DEVMODE
-            else if ((consoleActive) && ((x == cam.centrex) && (y == cam.centrey))) 
+            //DEVMODE (affichage de la camera)
+            else if ((consoleActive) && ((x == cam.centrex) && (y == cam.centrey)))
             {
                 wattron(jeu, COLOR_PAIR(consoleActive));
                 mvwprintw(jeu, jy, jx, "C");
@@ -214,7 +229,28 @@ void affichageJeu(joueur j, map instanceMap)
             
             else 
             {
-                mvwprintw(jeu, jy, jx, "%c", instanceMap.ptr_map[x][y]);
+                // gestion des bordures de la map
+                if (instanceMap.ptr_map[x][y] == CHAR_BORD)
+                {
+                    //DEVMODE
+                    if (consoleActive)
+                    {
+                        wattron(jeu, COLOR_PAIR(consoleActive));
+                        mvwprintw(jeu, jy, jx, "%c", instanceMap.ptr_map[x][y]);
+                        wattroff(jeu, COLOR_PAIR(consoleActive));
+                    }
+                    
+                    else
+                    {
+                        mvwprintw(jeu, jy, jx, "%c", CHAR_VIDE);
+                    }
+                }
+                
+                // affichage de la map
+                else
+                {
+                    mvwprintw(jeu, jy, jx, "%c", instanceMap.ptr_map[x][y]);
+                }
             }
             
             jx++;
@@ -223,27 +259,29 @@ void affichageJeu(joueur j, map instanceMap)
         jy++;
     }
 
-
     wrefresh(jeu);
     return;
 }
 
+
 /* Affiche le message de victoire */
 void afficherMsgVictoire()
 {
-   mvprintw(LINES/2 - 1, COLS/2 - 13, "Bravo ! Vous avez gagne !"); 
-   mvprintw(LINES/2, COLS/2 - 18, "Appuyez sur Entree pour recommencer"); 
-   mvprintw(LINES/2 + 1, COLS/2 - 24, "Appuyez sur une autre touche pour quitter le jeu"); 
+    mvprintw(LINES/2 - 1, COLS/2 - 13, "Bravo ! Vous avez gagne !"); 
+    mvprintw(LINES/2, COLS/2 - 18, "Appuyez sur Entree pour recommencer"); 
+    mvprintw(LINES/2 + 1, COLS/2 - 24, "Appuyez sur une autre touche pour quitter le jeu"); 
 }
+
 
 /* Affiche le message de mort */
 void afficherMsgMort()
 {
-   mvprintw(LINES/2, COLS/2 - 8, "Vous etes mort !"); 
-   mvprintw(LINES/2 + 1, COLS/2 - 20, "Appuyez sur une touche pour reessayer !"); 
+    mvprintw(LINES/2, COLS/2 - 8, "Vous etes mort !"); 
+    mvprintw(LINES/2 + 1, COLS/2 - 20, "Appuyez sur une touche pour reessayer !");
 }
 
-/* Libère la mémoire de l'affichage (window) */
+
+/* Libère la mémoire de l'affichage */
 void libererMemoireAffichage()
 {
     //DEVMODE
