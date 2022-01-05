@@ -23,14 +23,17 @@ void inputControle(int entree, bool *enCours, joueur *j) {
         case KEY_LEFT:
             mouvGauche(j);
             break;
-        //Tests
         case 'f':
-            if(consoleActive){
+            //DEVMODE
+            if(consoleActive)
+            {
                 mortJoueur(j);
             }
             break;
         case 'v':
-            if (consoleActive){
+            //DEVMODE
+            if (consoleActive)
+            {
                 victoireJoueur(j);
             }
             break;
