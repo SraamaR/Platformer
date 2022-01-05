@@ -1,6 +1,9 @@
 #ifndef PHYSICS_H
 #define PHYSICS_H
 
+/* physics :  */
+
+
 extern const float g;
 
 typedef struct s_coords {
@@ -26,8 +29,11 @@ typedef struct s_mouvement {
 
 coords calculPosition(int frameDebut, vecteur v0);
 
+/* retourne la position relative par rapport a l'instant précédent */
+float valeurAcceleration(mouvement accel);
+
+/*  */
 float valeurVitesse(mouvement vitesse);
 
-float valeurAcceleration(mouvement accel);
 
 #endif

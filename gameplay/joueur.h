@@ -1,8 +1,11 @@
 #ifndef JOUEUR_H
 #define JOUEUR_H
 
+/* joueur : permet de crer un joueur  */
+
 #include <stdbool.h>
 #include "../moteur/physics.h"
+
 
 typedef struct s_joueur {
 
@@ -16,8 +19,11 @@ typedef struct s_joueur {
 
 } joueur;
 
+/* Définit les coordonées du spawn */
+void defSpawn(int x, int y);
+
+/* Initialise un joueur aux coordonnées du spawn */
 joueur initJoueurSpawn();
 
-void defSpawn(int x, int y);
 
 #endif

@@ -6,39 +6,50 @@
 #include "../gameplay/joueur.h"
 #include "../main.h"
 
+
+/* Permet d'effectuer des actions celon l'entree clavier utilisee */
 void inputControle(int entree, bool *enCours, joueur *j) {
+
     switch(entree) {
+    
         case 27: // 27 => echap
             arretJeu();
             break;
+        
         case KEY_UP:
             mouvSaut(j);
             break;
+        
         case ' ':
             mouvSaut(j);
-            break;        
+            break;
+        
         case KEY_RIGHT:
             mouvDroite(j);
             break;
+        
         case KEY_LEFT:
             mouvGauche(j);
             break;
+        
         case 'f':
             //DEVMODE
-            if(consoleActive)
-            {
+            if (consoleActive) {
                 mortJoueur(j);
             }
             break;
+        
         case 'v':
             //DEVMODE
-            if (consoleActive)
-            {
+            if (consoleActive) {
                 victoireJoueur(j);
             }
             break;
+        
         default:
             break;
+        
     }
     return;
+
 }
