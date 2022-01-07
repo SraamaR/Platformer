@@ -177,6 +177,7 @@ void affichageJeu(joueur j, map instanceMap) {
     
         redimensionnerFenetre();
     
+        // reinitialisation du titre
         getmaxyx(titre, tyMax, txMax);
         werase(titre);
         box(titre, ACS_VLINE, ACS_HLINE);
@@ -209,17 +210,18 @@ void affichageJeu(joueur j, map instanceMap) {
     int jx;
     int jy = (jyMax/2)-(cam.largeur/2);
     
-    for (int y = cam.centrey-(cam.largeur/2); y < cam.centrey+(cam.largeur/2); y++) {
-        
+    // On affiche la map en fonction du centre de la camera (centre - la moitier de la longeur)
+    for (int y = cam.centrey-(cam.largeur/2); y < cam.centrey+(cam.largeur/2); y++) { // axe x
+    
         jx = (jxMax/2)-(cam.longueur/2);
-
-        for (int x = cam.centrex-(cam.longueur/2); x < cam.centrex+(cam.longueur/2); x++) {
+    
+        for (int x = cam.centrex-(cam.longueur/2); x < cam.centrex+(cam.longueur/2); x++) { //axe y
         
             // affichage du joueur
             if (x == j.position.x && y == j.position.y) {
                 mvwprintw(jeu, jy, jx, "&");
             }
-            
+        
             //DEVMODE (affichage de la camera)
             else if ((consoleActive) && ((x == cam.centrex) && (y == cam.centrey))) {
             

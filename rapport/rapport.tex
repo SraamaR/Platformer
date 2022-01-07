@@ -77,7 +77,15 @@
 		Platformer est un jeu de plateforme, où le but est d'arriver au bout d'une carte après de multiple obstacles.
 		Ce jeu se rapproche de Mario Bros.
 	
-		Le jeu est programmé en \textbf{C} et s'utilise dans une console (similaire a MS-DOS).
+		Le jeu est programmé en \textbf{C} et s'utilise dans une console (similaire a MS-DOS).\\
+
+		Le jeu est séparé en 4 grandes parties :
+		\begin{itemize}
+			\item map : Gestion du chargement et de la création de la carte
+			\item affichage : Gestion de l'affichage et des différents menus et du jeu
+			\item gameplay : Gestion du mouvement, des collisions, \dots
+			\item moteur : Gestion des calculs internes\\
+		\end{itemize}
 	
 
 	\section{Problèmes recontrés}
@@ -103,7 +111,6 @@
 				\item Les dimensions (x, y) de la carte
 				\item Un tableau contenant les données du fichier texte
 				\item Un autre tableau utile pour les collisions dont le fonctionnement est détaillé dans la partie Collisions.
-				\item \dots\\
 			\end{itemize}
 		
 			Un tableau en 2D de taille dynamique nécessite de libérer la mémoire occupée celui-ci l’arrêt du programme.
@@ -119,18 +126,35 @@
 		
 		\subsection{Affichage}
 		
+			L'affichage et une part importante d'un jeu, elle est la première interraction d'un joueur avec celui-ci.\\
+
+
+			Le problème c'est posé lorsqu'il a fallu afficher la carte en fonction de la position du joueur dans celle-ci.
+
+			En effet, Il est important qu'un joueur puisse voir suffisament ce qui l'entoure afin d'avoir une bonne expérience de jeu.
+
+			Nous avons donc opté sur la mise en place d'une \itshape{camera} via l'implémentation d'une structure.
+			\begin{lstlisting}[language=C, title={Structure Camera}]
+				typedef struct s_camera {
+				
+					int centrex;
+					int centrey;
+					int longueur;
+					int largeur;
+				
+				} camera;
+			\end{lstlisting}
+
 		\subsection{Collisions}
 		
 		
-		\begin{lstlisting}[language=C, title={Programme en C}]
-			int test;
-		\end{lstlisting}
+		
 
 	\section{Conclusion}
 
 	Parmi les idées qui auraient pû améliorer le jeu, nous avons retenu :
 	\begin{itemize}
-		\item Un menu pour choisir la carte
+		\item Un menu pour choisir différentes cartes
 		\item Des adversaires automatiques
 		\item Des couleurs
 		\item Éventuellement, un outil pour créer d'autres cartes (ou un guide)
