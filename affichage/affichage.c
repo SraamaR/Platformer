@@ -217,12 +217,10 @@ void redimensionnerFenetre() {
     
         wresize(titre, tyMax, nbColonneTerminal);
     
-        nbLigneConsole = nbLigneTerminal/6;
-        if (nbLigneConsole > 5) { // On limite le nombre de ligne à 5
-            nbLigneConsole = 5;
-        }
-        wresize(console, nbLigneConsole, nbLigneTerminal);
         werase(console);
+        delwin(console);
+        initFenetreConsole();
+
         wrefresh(console);
     
         wresize(jeu, nbLigneTerminal-tyMax-nbLigneConsole, nbColonneTerminal);

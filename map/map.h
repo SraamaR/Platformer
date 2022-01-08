@@ -1,7 +1,7 @@
 #ifndef MAP_H
 #define MAP_H
 
-/* map : permet de charger la map depuis un fichier .txt */
+/* map : Permet de charger la map depuis un fichier .txt */
 
 
 extern const char CHAR_BORD;

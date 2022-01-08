@@ -35,7 +35,7 @@ int main() {
     if(DEVMODE) {
     
         initConsole();
-        initLogFile();
+        initFichierLog();
     
     }
     initAffichageJeu();
@@ -90,7 +90,7 @@ int main() {
     if(DEVMODE) {
     
         libererMemoireConsole();
-        closeLogFile();
+        fermerFichierLog();
     
     }
     libererMemoireAffichage();

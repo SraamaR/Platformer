@@ -15,6 +15,7 @@
 %             Paramétrage               %
 %---------------------------------------%
 
+<<<<<<< HEAD
 \lstloadlanguages{C, Caml, Python, SQL}
 \lstdefinestyle{CustomCodeBlock}{
     backgroundcolor = \color{gray!10!white},   
@@ -34,6 +35,20 @@
     showstringspaces = false,
     showtabs = false,                  
     tabsize = 3,
+=======
+\lstdefinestyle{codeblock}{
+	language=C,
+	keywordstyle=\color{magenta},
+	basicstyle=\ttfamily \footnotesize,
+	identifierstyle=\color{blue},
+	numbersep=5pt,
+	tabsize=2,
+	breaklines=true,
+	numbers=left,
+	numberstyle=\tiny,
+	captionpos=b,
+	frame=single
+>>>>>>> 606de69c092e93b8efd7661850d7ac9653436199
 }
 \lstset{style = CustomCodeBlock}
 
@@ -119,15 +134,15 @@
 		
 			On stocke alors dans une structure  :
 			\begin{itemize}
-				\item Les dimensions (x, y) de la carte
+				\item Les dimensions \((x, y)\) de la carte
 				\item Un tableau contenant les données du fichier texte
 				\item Un autre tableau utile pour les collisions dont le fonctionnement est détaillé dans la partie Collisions.
 			\end{itemize}
 		
-			Un tableau en 2D de taille dynamique nécessite de libérer la mémoire occupée celui-ci l’arrêt du programme.
+			Un tableau en \(2D\) de taille dynamique nécessite de libérer la mémoire occupée celui-ci l’arrêt du programme.
 		
-			Un tableau en 2D peut être vu comme un tableau en 1D stockant des pointeurs qui pointent le premier élément 
-			de chaque colonne. Ce tableau en 1D correspond à la première ligne du tableau en 2D.
+			Un tableau en \(2D\) peut être vu comme un tableau en \(1D\) stockant des pointeurs qui pointent le premier élément 
+			de chaque colonne. Ce tableau en \(1D\) correspond à la première ligne du tableau en \(2D\).
 		
 			Pour libérer la mémoire occupée par le tableau on libère d’abord la mémoire occupée par chaque colonne puis 
 			on libère la mémoire occupée par la première ligne.
@@ -135,17 +150,31 @@
 	
 		\subsection{Physique et mouvement}
 		
+		Pour la partie liée au mouvement du joueur, l'utilisation d'équation horaire de physique à été la solution utilisée.
+		
+		Cependant, pour il faut d'abord créer un moyen de compter le temps : le compter en secondes directement aurait été compliqué et peu précis, nous avons donc intégrer un compteur d'image qui s'incrémente à chaque passage dans la boucle principale.
+		
+		\medskip
+		
+		Dans notre structure joueur, on a ::
+		
+		\begin{lstlisting}[]
+			content...
+		\end{lstlisting}
+		
+		\newpage
+		
 		\subsection{Affichage}
 		
-			L'affichage et une part importante d'un jeu, elle est la première interraction d'un joueur avec celui-ci.\\
+			L'affichage et une part importante d'un jeu, elle est la première interaction d'un joueur avec celui-ci.\\
 
 
 			Le problème c'est posé lorsqu'il a fallu afficher la carte en fonction de la position du joueur dans celle-ci.
 
-			En effet, Il est important qu'un joueur puisse voir suffisament ce qui l'entoure afin d'avoir une bonne expérience de jeu.
+			En effet, Il est important qu'un joueur puisse voir suffisamment ce qui l'entoure afin d'avoir une bonne expérience de jeu.
 
 			Nous avons donc opté sur la mise en place d'une \itshape{camera} via l'implémentation d'une structure.
-			\begin{lstlisting}[language=C, title={Structure Camera}]
+			\begin{lstlisting}[title={Structure Camera}]
 				typedef struct s_camera {
 				
 					int centrex;

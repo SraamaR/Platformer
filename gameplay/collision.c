@@ -172,10 +172,11 @@ bool verifierCollisionY(joueur* j, map instanceMap) {
     char objSuivant = instanceMap.ptr_map[j->position.x][j->position.y - 1];
     char objPrecedent = instanceMap.ptr_map[j->position.x][j->position.y + 1];
 
+    /* Tests
     char msg[100];
-
     sprintf(msg, "sens : %d", sens);
-    newLog(msg);
+    nouveauLog(msg);
+    */
 
     if(sens == 1) {
     
