@@ -5,13 +5,13 @@
 
 
 /* Ouvre le fichier de log */
-void initLogFile();
+void initFichierLog();
 
-/* ajoute un message au fichier de log */
-void newLog(char* message);
+/* Ajoute un message au fichier de log */
+void nouveauLog(char* message);
 
-/* referme le fichier de log */
-void closeLogFile();
+/* Referme le fichier de log */
+void fermerFichierLog();
 
 
 #endif

@@ -41,7 +41,7 @@ char** initTableau(int x, int y) {
 
     if (ptr_map == NULL) {
     
-        afficherMessageConsole("Erreur d'allocation memoire", ERRMSG);
+        afficherMessageConsole("Erreur d'allocation memoire", CRASHMSG);
         return NULL;
     
     }
@@ -53,7 +53,7 @@ char** initTableau(int x, int y) {
     
         if (ptr_map[i] == NULL) {
         
-            afficherMessageConsole("Erreur d'allocation memoire colonne", ERRMSG);
+            afficherMessageConsole("Erreur d'allocation memoire colonne", CRASHMSG);
         
             map instanceMap;
             instanceMap.ptr_map = ptr_map;
@@ -172,13 +172,13 @@ bool verifFormat(FILE* fichierMap, map instanceMap) {
 
     if (nbreSpawn == 0) {
     
-        afficherMessageConsole("Aucun point d'apparition trouve", ERRMSG);
+        afficherMessageConsole("Aucun point d'apparition trouve", CRASHMSG);
         return false;
     
     } 
     else if (nbreSpawn > 1) {
     
-        afficherMessageConsole("Plusieurs points d'apparition trouves", ERRMSG);
+        afficherMessageConsole("Plusieurs points d'apparition trouves", CRASHMSG);
         return false;
     
     }
@@ -199,7 +199,7 @@ map chargementMap() {
     fichierMap = fopen("map/map.txt", "r");
     if (fichierMap == NULL) {
     
-        afficherMessageConsole("Le fichier map.txt n'existe pas ou sa lecture est impossible", ERRMSG);
+        afficherMessageConsole("Le fichier map.txt n'existe pas ou sa lecture est impossible", CRASHMSG);
         fclose(fichierMap);
         exit(1);
     
@@ -242,7 +242,7 @@ map chargementMap() {
 
     if (verifFormat(fichierMap, instanceMap) == false) {
     
-        afficherMessageConsole("Le format du fichier map.txt est invalide", ERRMSG);
+        afficherMessageConsole("Le format du fichier map.txt est invalide", CRASHMSG);
         fclose(fichierMap);
         exit(1);
     

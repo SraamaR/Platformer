@@ -21,19 +21,19 @@ const float V_MAX = 9;
 const float VY_MAX = 15;
 
 
-/* crée un nouveau mouvement avec un vecteur vitesse de composantes vx et vy */
+/* Crée un nouveau mouvement avec un vecteur vitesse de composantes vx et vy */
 void ajouterVitesse(joueur* j, float valeur, int type) {
 
     if (type == MOUV_X) {
     
         j->vitesseX.valeur += valeur;
     
-        // la vitesse est nulle si on change de sens subitement
+        // La vitesse est nulle si on change de sens subitement
         if (((j->vitesseX.valeur < 0) && (valeur > 0)) || ((j->vitesseX.valeur > 0) && (valeur < 0))) {
             j->vitesseX.valeur = 0;
         }
     
-        // on limite la vitesse, si supérieure on la met au max
+        // On limite la vitesse, si supérieure on la met au max
         if (j->vitesseX.valeur > V_MAX) {
             j->vitesseX.valeur = V_MAX;
         }
@@ -54,7 +54,7 @@ void ajouterVitesse(joueur* j, float valeur, int type) {
             j->vitesseY.valeur = 0;
         }
 
-        // on limite la vitesse, si supérieure on la met au max
+        // oO limite la vitesse, si supérieure on la met au max
         if (j->vitesseY.valeur > VY_MAX) {
             j->vitesseY.valeur = VY_MAX;
         }
@@ -98,10 +98,10 @@ void nouveauX(joueur* j) {
 
     if (vx > 0) {
     
-        if (vx+ax > 0) { // si la décélération + le mouvement crée par la vitesse va toujours dans le sens du mouvement, on continue
+        if (vx+ax > 0) { // Si la décélération + le mouvement crée par la vitesse va toujours dans le sens du mouvement, on continue
             j->positionPrecise.x += vx+ax;
         }
-        else { // sinon on arrête le mouvement
+        else { // Sinon on arrête le mouvement
 
             j->vitesseX.valeur = 0;
             j->accelX.valeur = 0;
@@ -110,10 +110,10 @@ void nouveauX(joueur* j) {
     } 
     else if (vx < 0) {
     
-        if (vx+ax < 0) { // si la décélération + le mouvement crée par la vitesse va toujours dans le sens du mouvement, on continue
+        if (vx+ax < 0) { // Si la décélération + le mouvement crée par la vitesse va toujours dans le sens du mouvement, on continue
             j->positionPrecise.x += vx+ax;
         }
-        else { // sinon on arrête le mouvement
+        else { // Sinon on arrête le mouvement
         
             j->vitesseX.valeur = 0;
             j->accelX.valeur = 0;
@@ -133,10 +133,6 @@ void actualisationMouvements(joueur *j, map instanceMap) {
     vecteur nvDelta;
     nvDelta.y = j->positionPrecise.y;
     nvDelta.x = -j->positionPrecise.x;
-    char msg[100];
-
-    sprintf(msg, "collision : %d", verifierCollisionY(j, instanceMap));
-    newLog(msg);
 
     if (!verifierCollisionY(j, instanceMap)) {
     
@@ -145,6 +141,11 @@ void actualisationMouvements(joueur *j, map instanceMap) {
         j->position.y = round(j->positionPrecise.y);
     
     }
+    else{
+
+        nouveauLog("Collision en Y");
+
+    }
 
     if (!verifierCollisionX(j, instanceMap)) {
     
@@ -152,45 +153,52 @@ void actualisationMouvements(joueur *j, map instanceMap) {
         j->position.x = round(j->positionPrecise.x);
     
     }
+    else{
+
+        nouveauLog("Collision en X");
+
+    }
 
     nvDelta.y -= j->positionPrecise.y;
     nvDelta.x += j->positionPrecise.x;
 
     j->deltaPos = nvDelta;
     
-    sprintf(msg, "dx: %f, dy: %f", j->deltaPos.x, j->deltaPos.y);
-    newLog(msg);
-
-    sprintf(msg, "x: %d, y: %d", j->position.x, j->position.y);
-    newLog(msg);
+    //char msg[100];
+    //sprintf(msg, "dx: %f, dy: %f", j->deltaPos.x, j->deltaPos.y);
+    //nouveauLog(msg);
+    //sprintf(msg, "x: %d, y: %d", j->position.x, j->position.y);
+    //nouveauLog(msg);
 
     return;
 
 }
 
 
-/* Creer un mouvement vers la gauche */
+/* Crée un mouvement vers la gauche */
 void mouvGauche(joueur* j) {
 
     ajouterVitesse(j, -3.0, MOUV_X);
     ajouterAcceleration(j, 1.5, MOUV_X);
+    
+    /* Tests
     afficherMessageConsole("Nouveau mouvement gauche", INFOMSG);
-
     char msg[100];
     sprintf(msg, "vx %f", j->vitesseX.valeur);
-    newLog(msg);
+    nouveauLog(msg);
+    */
 
     return;
 
 }
 
 
-/* Creer un mouvement vers la droite */
+/* Crée un mouvement vers la droite */
 void mouvDroite(joueur* j) {
 
     ajouterVitesse(j, 3.0, MOUV_X);
     ajouterAcceleration(j, -1.5, MOUV_X);
-    afficherMessageConsole("Nouveau mouvement droite", INFOMSG);
+    //afficherMessageConsole("Nouveau mouvement droite", INFOMSG);
 
     return;
 
@@ -202,7 +210,7 @@ void mouvSaut(joueur* j) {
 
     ajouterVitesse(j, 20.0, MOUV_Y);
     ajouterAcceleration(j, -g, MOUV_Y);
-    afficherMessageConsole("Nouveau mouvement saut", INFOMSG);
+    //afficherMessageConsole("Nouveau mouvement saut", INFOMSG);
 
     return;
 
@@ -212,6 +220,7 @@ void mouvSaut(joueur* j) {
 /* Gestion de la mort du joueur */
 void mortJoueur(joueur* j) {
     afficherMsgMort();
+    afficherMessageConsole("Mort joueur", INFOMSG);
 
     // On attend une entrée utilisateur pour recommencer à jouer
     int input;
@@ -240,6 +249,7 @@ void mortJoueur(joueur* j) {
 void victoireJoueur(joueur* j) {
 
     afficherMsgVictoire();
+    afficherMessageConsole("Victoire joueur", INFOMSG);
 
     // On attend une entrée utilisateur pour recommencer à jouer ou quitter le jeu
     int input;
