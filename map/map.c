@@ -15,7 +15,7 @@ const int NBRE_LIGNES_MAX_MAP = 255;
 const char CHAR_BORD  = '#';
 const char CHAR_SPAWN = '%';
 const char CHAR_VIDE  = ' ';
-const char CHAR_PLEIN = '*';
+const char CHAR_PLEIN = '.';
 const char CHAR_MUR = '|';
 const char CHAR_COIN = '+';
 const char CHAR_PLATFORME = '-';
@@ -287,10 +287,6 @@ void posSpawnJoueur(int* x, int* y, map instanceMap) {
             
                 *x = i;
                 *y = j;
-            
-                /* On remplace le charactère du point d'appartion par un vide
-                après avoir stocké ces coordonées */
-                instanceMap.ptr_map[i][j] = CHAR_VIDE;
                 return;
             
             }
@@ -312,11 +308,8 @@ int posFin(map instanceMap) {
     
         for (int j = 0; j < instanceMap.y; j++) {
         
-            if (instanceMap.ptr_map[i][j] == CHAR_FIN) { // On remplace le charactère de fin par un vide après avoir stocké ses coordonées
-            
-                instanceMap.ptr_map[i][j] = CHAR_VIDE;
+            if (instanceMap.ptr_map[i][j] == CHAR_FIN) {
                 return i;
-            
             }
         
         }

@@ -1,4 +1,4 @@
-#define TARGET_FPS 60 // nombre de fps visé (defaut : 60)
+#define TARGET_FPS 120 // nombre de fps visé (defaut : 60)
 #define DEVMODE false // active le mode développeur (console + log)
 
 #include <ncurses.h>
@@ -17,7 +17,7 @@
 
 
 bool enCours = true; // Cette variable est vraie tant que le jeu est en marche
-
+int x_fin;
 
 /* Fonction principale du jeu */
 int main() {
@@ -50,7 +50,7 @@ int main() {
     // Initialise le joueur
     int spawn_x = 0;
     int spawn_y = 0;
-    int x_fin = posFin(instanceMap);
+    x_fin = posFin(instanceMap);
     posSpawnJoueur(&spawn_x, &spawn_y, instanceMap);
     defSpawn(spawn_x, spawn_y);
     joueur j = initJoueurSpawn();
@@ -73,10 +73,10 @@ int main() {
         affichageJeu(j, instanceMap);
     
         // Envoi puis traitement de l'entrée utilisateur
-        inputControle(getch(), &enCours, &j);
+        inputControle(getch(), &enCours, &j, instanceMap);
     
         if (j.position.x >= x_fin) {
-            victoireJoueur(&j);
+            victoireJoueur(&j, instanceMap);
         }
     
         end = clock(); // compteur de fin

@@ -13,6 +13,9 @@
 #include "../main.h"
 
 
+bool mortJoueurActif = false;
+bool victoireJoueurActive = false;
+
 const int MOUV_X = 0;
 const int MOUV_Y = 1;
 
@@ -210,8 +213,12 @@ void mouvSaut(joueur* j) {
 
 
 /* Gestion de la mort du joueur */
-void mortJoueur(joueur* j) {
+void mortJoueur(joueur* j, map instanceMap) {
+
+    mortJoueurActif = true;
+    affichageJeu(*j, instanceMap);
     afficherMsgMort();
+    afficherMessageConsole("Mort du joueur", INFOMSG);
 
     // On attend une entrée utilisateur pour recommencer à jouer
     int input;
@@ -231,15 +238,21 @@ void mortJoueur(joueur* j) {
     }
     nodelay(stdscr, true);
 
+    mortJoueurActif = false;
+    ecrireTitre();
+
     return;
 
 }
 
 
 /* Gestion de la victoire */
-void victoireJoueur(joueur* j) {
+void victoireJoueur(joueur* j, map instanceMap) {
 
+    victoireJoueurActive = true;
+    affichageJeu(*j, instanceMap);
     afficherMsgVictoire();
+    afficherMessageConsole("Victoire du joueur", INFOMSG);
 
     // On attend une entrée utilisateur pour recommencer à jouer ou quitter le jeu
     int input;
@@ -257,6 +270,9 @@ void victoireJoueur(joueur* j) {
     else if (input == 27) {
         arretJeu();
     }
+
+    victoireJoueurActive = false;
+    ecrireTitre(); // Partie affichage : on remet le titre comme il etait avant
 
     return;
 

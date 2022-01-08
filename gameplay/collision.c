@@ -88,7 +88,7 @@ bool verifierCollisionX(joueur* j, map instanceMap) {
     if (sens == 1) {
     
         if (objSuivant == CHAR_PIQUEDROITE) {
-            mortJoueur(j);
+            mortJoueur(j, instanceMap);
         }
     
         if (suivant == COLLISION) {
@@ -103,7 +103,7 @@ bool verifierCollisionX(joueur* j, map instanceMap) {
     if (sens == -1) {
     
         if(objPrecedent == CHAR_PIQUEGAUCHE) {
-            mortJoueur(j);
+            mortJoueur(j, instanceMap);
         }
     
         if (precedent == COLLISION) {
@@ -180,7 +180,7 @@ bool verifierCollisionY(joueur* j, map instanceMap) {
     if(sens == 1) {
     
         if (objSuivant == CHAR_PIQUEHAUT) {
-            mortJoueur(j);
+            mortJoueur(j, instanceMap);
         }
     
         if (suivant == COLLISION) {
@@ -195,7 +195,7 @@ bool verifierCollisionY(joueur* j, map instanceMap) {
     if(sens == -1){
     
         if (objPrecedent == CHAR_PIQUEBAS) {
-            mortJoueur(j);
+            mortJoueur(j, instanceMap);
         }
 
         if (precedent == COLLISION) {

@@ -8,7 +8,7 @@
 
 
 /* Permet d'effectuer des actions celon l'entree clavier utilisee */
-void inputControle(int entree, bool *enCours, joueur *j) {
+void inputControle(int entree, bool *enCours, joueur *j, map instanceMap) {
 
     switch(entree) {
     
@@ -35,14 +35,14 @@ void inputControle(int entree, bool *enCours, joueur *j) {
         case 'f':
             //DEVMODE
             if (consoleActive) {
-                mortJoueur(j);
+                mortJoueur(j, instanceMap);
             }
             break;
         
         case 'v':
             //DEVMODE
             if (consoleActive) {
-                victoireJoueur(j);
+                victoireJoueur(j, instanceMap);
             }
             break;
         

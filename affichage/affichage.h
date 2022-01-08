@@ -10,6 +10,9 @@
 /* Initialise la bibliotèque NCurses */
 void initCurses();
 
+/* Ecrit le titre du jeu (fenetre Titre) */
+void ecrireTitre();
+
 /* Affiche le menu */
 void afficherMenu();
 

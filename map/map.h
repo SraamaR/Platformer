@@ -5,11 +5,17 @@
 
 
 extern const char CHAR_BORD;
+extern const char CHAR_SPAWN;
 extern const char CHAR_VIDE;
-extern const char CHAR_PIQUEDROITE;
-extern const char CHAR_PIQUEGAUCHE;
+extern const char CHAR_PLEIN;
+extern const char CHAR_MUR;
+extern const char CHAR_COIN;
+extern const char CHAR_PLATFORME;
 extern const char CHAR_PIQUEHAUT;
 extern const char CHAR_PIQUEBAS;
+extern const char CHAR_PIQUEDROITE;
+extern const char CHAR_PIQUEGAUCHE;
+extern const char CHAR_FIN;
 
 extern const char COLLISION;
 extern const char PAS_COLLISION; 
