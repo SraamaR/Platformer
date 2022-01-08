@@ -20,7 +20,7 @@
 	keywordstyle=\color{magenta},
 	basicstyle=\ttfamily \footnotesize,
 	identifierstyle=\color{blue},
-	numbersep=5pt,
+	%numbersep=5pt,
 	tabsize=2,
 	breaklines=true,
 	numbers=left,
@@ -90,7 +90,7 @@
 		\end{itemize}
 	
 
-	\section{Problèmes recontrés}
+	\section{Problèmes rencontrés}
 
 		\subsection{Chargement de la carte}
 		
@@ -128,14 +128,23 @@
 		
 		Pour la partie liée au mouvement du joueur, l'utilisation d'équation horaire de physique à été la solution utilisée.
 		
-		Cependant, pour il faut d'abord créer un moyen de compter le temps : le compter en secondes directement aurait été compliqué et peu précis, nous avons donc intégrer un compteur d'image qui s'incrémente à chaque passage dans la boucle principale.
+		Cependant, pour il faut d'abord créer un moyen de compter le temps : le compter en secondes directement aurait été compliqué et peu précis, nous avons donc intégrer un compteur d'image qui est incrémenté à chaque passage dans la boucle principale.
 		
 		\medskip
 		
-		Dans notre structure joueur, on a ::
+		Ainsi, pour faciliter les modifications de valeurs, on utilise deux structure : \textit{vecteur} et \textit{coords}.
+		Ces structures sont composés de deux variable \(x\) et \(y\)(qui décomposent le mouvement sur les deux axes), en flottant pour \textit{vecteur} et entier pour \textit{coords}. Ces deux types ont été nécessaire car lors d'un mouvement les coordonnées changent de très peu, ce qui ne pourrait pas être stocké convenablement dans des entiers, et la position du joueur ne peut être que entière.  
 		
-		\begin{lstlisting}[]
-			content...
+		Un autre type, \textit{mouvement} est utilisé pour stocker les actions en cours sur le joueur. La solution retenue ici à été de créer une variable de mouvement pour la vitesse et l'accélération mais en décomposant le mouvement en \(x\) et \(y\). Cette structure mouvement contient une valeur flottante, mais également une horloge, qui indique l'image de départ du mouvement.
+		 
+		\medskip
+		On
+		
+		\begin{lstlisting}[title=Test]
+typedef struct s_joueur {
+	coords position;
+	vecteur 
+} joueur;
 		\end{lstlisting}
 		
 		\newpage
@@ -149,16 +158,16 @@
 
 			En effet, Il est important qu'un joueur puisse voir suffisamment ce qui l'entoure afin d'avoir une bonne expérience de jeu.
 
-			Nous avons donc opté sur la mise en place d'une \itshape{camera} via l'implémentation d'une structure.
-			\begin{lstlisting}[title={Structure Camera}]
-				typedef struct s_camera {
+			Nous avons donc opté sur la mise en place d'une \textit{camera} via l'implémentation d'une structure.
+			\begin{lstlisting}[title=Structure Camera]
+typedef struct s_camera {
+	
+	int centrex;
+	int centrey;
+	int longueur;
+	int largeur;
 				
-					int centrex;
-					int centrey;
-					int longueur;
-					int largeur;
-				
-				} camera;
+} camera;
 			\end{lstlisting}
 
 		\subsection{Collisions}
