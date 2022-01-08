@@ -67,13 +67,8 @@ void initConsole(){
     for (int i = 0; i < 5; i++)
     {
         messageList[i].msg = malloc(LONGUEUR_MAX_MSG * sizeof(char)); // on prepare des strings du nombre de caractère que peut contenir l'écran
-        messageList[i].msg[0] = '\0';
-
-        for(int k = 1; k < LONGUEUR_MAX_MSG - 1; k++)
-        {
-            messageList[i].msg[k] = ' ';
-        }
     }
+    clearConsole();
 
     init_pair(INFOMSG, COLOR_CYAN, COLOR_BLACK);
     init_pair(ERRMSG, COLOR_RED, COLOR_BLACK);
