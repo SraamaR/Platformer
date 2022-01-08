@@ -29,5 +29,7 @@ void initFenetreConsole();
 /* Libère la mémoire de la console */
 void libererMemoireConsole();
 
+/* Nettoie le contenu des messages de la console */
+void clearConsole();
 
 #endif
