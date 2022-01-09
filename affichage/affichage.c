@@ -216,8 +216,8 @@ void redimensionnerFenetre() {
     if (consoleActive) {
     
         wresize(titre, tyMax, nbColonneTerminal);
-    
-        werase(console);
+
+        clearConsole();
         delwin(console);
         initFenetreConsole();
         wrefresh(console);

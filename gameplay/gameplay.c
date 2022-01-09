@@ -226,6 +226,7 @@ void mortJoueur(joueur* j, map instanceMap) {
     mortJoueurActif = true;
     affichageJeu(*j, instanceMap);
     afficherMsgMort();
+    afficherMessageConsole("Mort joueur", INFOMSG);
 
     // On attend une entrée utilisateur pour recommencer à jouer
     int input;
@@ -259,6 +260,7 @@ void victoireJoueur(joueur* j, map instanceMap) {
     victoireJoueurActive = true;
     affichageJeu(*j, instanceMap);
     afficherMsgVictoire();
+    afficherMessageConsole("Victoire joueur", INFOMSG);
 
     // On attend une entrée utilisateur pour recommencer à jouer ou quitter le jeu
     int input;

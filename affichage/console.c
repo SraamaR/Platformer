@@ -29,6 +29,22 @@ typedef struct messageConsole {
 
 messageConsole messageList[5]; // on stocke les messages (5 lignes max)
 
+/* Nettoie le contenu des messages de la console */
+void clearConsole(){
+
+    ligneDernierMsg = 0;
+    wclear(console);
+
+    for (int i = 0; i < 5; i++)
+    {
+        messageList[i].msg[0] = '\0';
+        for(int k = 1; k < LONGUEUR_MAX_MSG - 1; k++)
+        {
+            messageList[i].msg[k] = ' ';
+        }
+    }
+
+}
 
 /* Initialise la fenêtre ncurses de la console */
 void initFenetreConsole() {
@@ -40,9 +56,12 @@ void initFenetreConsole() {
     }
 
     console = subwin(stdscr, nbLigneConsole, COLS, 3, 0);
+<<<<<<< HEAD
     ligneDernierMsg = 0;
 
     return;
+=======
+>>>>>>> 6c7cc7ee024c20c49de6e4ee3bce633d68667db1
 
 }
 
@@ -52,9 +71,13 @@ void initConsole() {
     for (int i = 0; i < 5; i++) {
     
         messageList[i].msg = malloc(LONGUEUR_MAX_MSG * sizeof(char)); // on prepare des strings du nombre de caractère que peut contenir l'écran
+<<<<<<< HEAD
         messageList[i].msg[0] = '\0';
     
+=======
+>>>>>>> 6c7cc7ee024c20c49de6e4ee3bce633d68667db1
     }
+    clearConsole();
 
     init_pair(INFOMSG, COLOR_CYAN, COLOR_BLACK);
     init_pair(ERRMSG, COLOR_RED, COLOR_BLACK);
@@ -99,10 +122,20 @@ void afficherMessageConsole(char *str, int msgType) {
     }
 
     // Si on a atteint le max de la console, on décale d'un rang les messages
+<<<<<<< HEAD
     if (ligneDernierMsg == nbLigneConsole) {
     
+        ligneDernierMsg = nbLigneConsole;
         for (int i = 0; i < nbLigneConsole - 1; i++) {
         
+=======
+    if (ligneDernierMsg >= nbLigneConsole){
+
+        ligneDernierMsg = nbLigneConsole;
+        for (int i = 0; i < nbLigneConsole - 1; i++)
+        {
+
+>>>>>>> 6c7cc7ee024c20c49de6e4ee3bce633d68667db1
             messageList[i].messageType = messageList[i + 1].messageType;
             messageList[i].timeFrame = messageList[i + 1].timeFrame;
             strncpy(messageList[i].msg, messageList[i + 1].msg, LONGUEUR_MAX_MSG * sizeof(char));
