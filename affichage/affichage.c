@@ -2,8 +2,10 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include "../main.h"
 #include "./console.h"
 #include "../gameplay/joueur.h"
+#include "../gameplay/gameplay.h"
 #include "../map/map.h"
 
 
@@ -16,6 +18,16 @@ int jxMax, jyMax;
 int txMax, tyMax;
 
 
+const int base = 0;
+const int bleu = 1;
+const int violet = 2;
+const int rouge = 3;
+const int vert = 4;
+const int blanc = 5;
+const int noir = 6;
+const int cyan = 7;
+
+
 typedef struct s_camera {
 
     int centrex;
@@ -25,22 +37,48 @@ typedef struct s_camera {
 
 } camera;
 
+const char* logo1[] = {
+    "  _____ ",
+    " |  __ \\",
+    " | |__) ",
+    " |  ___/",
+    " | |    ",
+    " |_|    "
+};
 
-const char logo[] = 
-"  _____  ______                               \n"
-" |  __ \\|  ____|                             \n"
-" | |__) | |__ ___  _ __ _ __ ___   ___ _ __   \n"
-" |  ___/|  __/ _ \\| '__| '_ ` _ \\ / _ | '__|\n"
-" | |    | | | (_) | |  | | | | | |  __| |     \n"
-" |_|    |_|  \\___/|_|  |_| |_| |_|\\___|_|   \n"
-;
+const char* logo2[] = {
+    " ______                               \n",
+    "|  ____|                               \n",
+    "| |__ ___  _ __ _ __ ___   ___ _ __   \n",
+    "|  __/ _ \\| '__| '_ ` _ \\ / _ | '__|  \n",
+    "| | | (_) | |  | | | | | |  __| |     \n",
+    "|_|  \\___/|_|  |_| |_| |_|\\___|_|     \n",
+};
 
 
-/* Initialise la bibliotèque NCurses */
+/* Initialise les paires de couleurs */
+void initCouleur() {
+
+    init_pair(base, COLOR_WHITE, COLOR_BLACK); // Couleur de base
+    init_pair(bleu, COLOR_BLUE, COLOR_BLACK); // Mur
+    init_pair(violet, COLOR_MAGENTA, COLOR_BLACK); // Sol
+    init_pair(rouge, COLOR_RED, COLOR_BLACK); // Pique, message de mort
+    init_pair(vert, COLOR_GREEN, COLOR_BLACK); // Message de victoire
+    init_pair(blanc, COLOR_WHITE, COLOR_WHITE); // Personnage
+    init_pair(cyan, COLOR_CYAN, COLOR_BLACK); // DEVMODE
+    init_pair(noir, COLOR_BLACK, COLOR_BLACK); // Invisible
+
+    return;
+
+}
+
+
+/* Initialise la bibliotèque NCurses et les paires de couleurs*/
 void initCurses() {
 
     initscr();
     start_color();
+    initCouleur();
     noecho(); // Permet de ne pas afficher l'entrée utilisateur
     curs_set(0); // Curseur invisible
 
@@ -52,13 +90,84 @@ void initCurses() {
 /* Affiche le menu */
 void afficherMenu() {
 
-    printw(logo);
-    mvprintw(7, 1, "Bienvenue, appuyez sur une touche pour jouer !");
-    mvprintw(LINES-4, 1, "Controles :");
-    mvprintw(LINES-3, 1, "Mouvement Droite/Gauche : Fleche Droite/Gauche");
-    mvprintw(LINES-2, 1, "Saut : Fleche Haut ou Barre Espace");
-    mvprintw(LINES-1, 1, "Quitter le jeu : Touche Echap");
+    // Affichage du logo
+    for (int y = 0; y < 6 ; y++) {
+    
+        attron(COLOR_PAIR(violet));
+        mvprintw((LINES/2)-4+y, (COLS/2)-24, logo1[y]); // P
+        attroff(COLOR_PAIR(violet));
+    
+        attron(COLOR_PAIR(bleu));
+        mvprintw((LINES/2)-4+y, (COLS/2)-16, logo2[y]); // latformer
+        attroff(COLOR_PAIR(bleu));
+    
+    }
+    attron(A_BLINK); // Clignotement
+    mvprintw((LINES/2)+4, (COLS/2)-23, "Veuillez appuyer sur une touche pour jouer !");
+    attroff(A_BLINK);
 
+    attron(COLOR_PAIR(violet));
+    mvprintw(LINES-6, 2, "Controles :");
+    attroff(COLOR_PAIR(violet));
+
+    attron(COLOR_PAIR(bleu));
+    mvprintw(LINES-4, 2, "Mouvement Droite/Gauche :");
+    mvprintw(LINES-3, 2, "Saut :");
+    mvprintw(LINES-2, 2, "Quitter le jeu :");
+    attroff(COLOR_PAIR(bleu));
+
+    mvprintw(LINES-4, 28, "Fleche Droite/Gauche");
+    mvprintw(LINES-3, 9, "Fleche Haut ou Barre Espace");
+    mvprintw(LINES-2, 19, "Touche Echap");
+
+    refresh();
+
+    return;
+
+}
+
+
+/* Ecrit le titre du jeu (fenetre titre) */
+void ecrireTitre() {
+
+    getmaxyx(titre, tyMax, txMax);
+
+    // changement couleur bordure celon menu du jeu
+    if (mortJoueurActif) {
+    
+        wattron(titre, COLOR_PAIR(rouge));
+        box(titre, ACS_VLINE, ACS_HLINE);
+        wattroff(titre, COLOR_PAIR(rouge));
+    
+    }
+    else if (victoireJoueurActive) {
+    
+        wattron(titre, COLOR_PAIR(vert));
+        box(titre, ACS_VLINE, ACS_HLINE);
+        wattroff(titre, COLOR_PAIR(vert));
+    
+    }
+    // [DEVMODE]
+    else if (consoleActive) {
+    
+        wattron(titre, COLOR_PAIR(cyan));
+        box(titre, ACS_VLINE, ACS_HLINE);
+        wattroff(titre, COLOR_PAIR(cyan));
+    
+    }
+    else {
+        box(titre, ACS_VLINE, ACS_HLINE);
+    }
+
+    wattron(titre, COLOR_PAIR(violet));
+    mvwprintw(titre, 1, (txMax/2)-4, "P");
+    wattroff(titre, COLOR_PAIR(violet));
+
+    wattron(titre, COLOR_PAIR(bleu));
+    mvwprintw(titre, 1, (txMax/2)-3, "latformer");
+    wattroff(titre, COLOR_PAIR(bleu));
+
+    wrefresh(titre);
     return;
 
 }
@@ -71,12 +180,11 @@ void initAffichageJeu() {
     nbLigneTerminal = LINES;
 
     // création des fenêtres
-    //DEVMODE
+    // [DEVMODE]
     if (consoleActive) {
     
         titre = subwin(stdscr, 3, nbColonneTerminal,  0, 0);
-        init_pair(consoleActive, COLOR_CYAN, COLOR_BLACK);
-        wattron(titre, COLOR_PAIR(consoleActive));
+        wattron(titre, COLOR_PAIR(cyan));
         
         jeu = subwin(stdscr, nbLigneTerminal-3-nbLigneConsole, nbColonneTerminal, 3+nbLigneConsole, 0);
     
@@ -89,10 +197,7 @@ void initAffichageJeu() {
     }
 
     // initialisation titre
-    getmaxyx(titre, tyMax, txMax);
-    
-    box(titre, ACS_VLINE, ACS_HLINE);
-    mvwprintw(titre, 1, (txMax/2)-4, "Platformer");
+    ecrireTitre();
 
     // initialisation jeu
     getmaxyx(jeu, jyMax, jxMax);
@@ -107,21 +212,17 @@ void initAffichageJeu() {
 /* Redimensionne les différentes fenêtres */
 void redimensionnerFenetre() {
 
-    //DEVMODE
+    // [DEVMODE]
     if (consoleActive) {
     
         wresize(titre, tyMax, nbColonneTerminal);
-    
-        nbLigneConsole = nbLigneTerminal/6;
-        if (nbLigneConsole > 5) { // On limite le nombre de ligne à 5
-            nbLigneConsole = 5;
-        }
-        wresize(console, nbLigneConsole, nbLigneTerminal);
-        werase(console);
+
+        clearConsole();
+        delwin(console);
+        initFenetreConsole();
         wrefresh(console);
     
         wresize(jeu, nbLigneTerminal-tyMax-nbLigneConsole, nbColonneTerminal);
-        box(titre, ACS_VLINE, ACS_HLINE);
     
     }
     else {
@@ -158,10 +259,60 @@ void positionnerCamera(camera* cam, joueur* j, map* instanceMap) {
         cam->centrey = instanceMap->y-(cam->largeur/2);
     }
     else {
-        cam->centrey = j->position.y; // par défaut centré sur le joueur
+        cam->centrey = j->position.y;
     }
 
     return;
+
+}
+
+/* Permet de définir la constante couleur correspondante au caractere */
+int definirCouleur(map instanceMap, int x, int y) {
+
+    char c = instanceMap.ptr_map[x][y];
+
+    // caracteres seulement visibles en [DEVMODE]
+    if ((c == CHAR_BORD) || (c == CHAR_SPAWN) || (c == CHAR_FIN)) {
+    
+        if (consoleActive) {
+            return cyan;
+        }
+        return noir;
+    
+    }
+    // zone de victoire
+    if (x >= x_fin) {
+    
+        if (victoireJoueurActive) { // menu de victoire
+            return vert;
+        }
+        return base;
+    
+    }
+    // piques
+    if ((c == CHAR_PIQUEHAUT) || (c == CHAR_PIQUEBAS) || (c == CHAR_PIQUEGAUCHE) || (c == CHAR_PIQUEDROITE)) {
+    
+        if (mortJoueurActif) { // menu de mort
+            return rouge;
+        }
+        return base;
+    
+    }
+    // sol et delimitations
+    if ((c == CHAR_COIN) || (c == CHAR_PLATFORME)) {
+    
+        if ((y > 0) && ((instanceMap.ptr_map[x][y-1] == ' ') || (instanceMap.ptr_map[x][y-1] == '%'))) { // On regarde s'il y a du vide au dessus
+            return violet;
+        }
+        return bleu;
+    
+    }
+    // murs
+    if ((c == CHAR_MUR) || (c == CHAR_PLEIN)) {
+        return bleu;
+    }
+
+    return base;
 
 }
 
@@ -177,16 +328,12 @@ void affichageJeu(joueur j, map instanceMap) {
     
         redimensionnerFenetre();
     
-        // reinitialisation du titre
-        getmaxyx(titre, tyMax, txMax);
         werase(titre);
-        box(titre, ACS_VLINE, ACS_HLINE);
-        mvwprintw(titre, 1, (txMax/2)-4, "Platformer");
-        wrefresh(titre);
+        ecrireTitre();
     
         getmaxyx(jeu, jyMax, jxMax);
         werase(jeu);
-
+    
         afficherMessageConsole("Nouveau redimensionnement fenetre", INFOMSG);
     
     }
@@ -195,7 +342,7 @@ void affichageJeu(joueur j, map instanceMap) {
     camera cam;
     
     cam.longueur = jxMax;
-    if (jxMax > instanceMap.x) {
+    if (jxMax > instanceMap.x) { // on limite la taille de la camera à celle de la map
         cam.longueur = instanceMap.x;
     }
     
@@ -209,50 +356,39 @@ void affichageJeu(joueur j, map instanceMap) {
     // affichage du jeu
     int jx;
     int jy = (jyMax/2)-(cam.largeur/2);
+    int couleur;
     
-    // On affiche la map en fonction du centre de la camera (centre - la moitier de la longeur)
+    // on affiche la map en fonction du centre de la camera (centre - la moitier de la longeur)
     for (int y = cam.centrey-(cam.largeur/2); y < cam.centrey+(cam.largeur/2); y++) { // axe x
     
         jx = (jxMax/2)-(cam.longueur/2);
     
-        for (int x = cam.centrex-(cam.longueur/2); x < cam.centrex+(cam.longueur/2); x++) { //axe y
+        for (int x = cam.centrex-(cam.longueur/2); x < cam.centrex+(cam.longueur/2); x++) { // axe y
         
             // affichage du joueur
             if (x == j.position.x && y == j.position.y) {
-                mvwprintw(jeu, jy, jx, "&");
+            
+                wattron(jeu, COLOR_PAIR(blanc));
+                mvwaddch(jeu, jy, jx, '&');
+                wattroff(jeu, COLOR_PAIR(blanc));
+            
             }
-        
-            //DEVMODE (affichage de la camera)
+            // [DEVMODE] affichage de la camera
             else if ((consoleActive) && ((x == cam.centrex) && (y == cam.centrey))) {
             
-                wattron(jeu, COLOR_PAIR(consoleActive));
-                mvwprintw(jeu, jy, jx, "C");
-                wattroff(jeu, COLOR_PAIR(consoleActive));
+                wattron(jeu, COLOR_PAIR(cyan));
+                mvwaddch(jeu, jy, jx, 'C');
+                wattroff(jeu, COLOR_PAIR(cyan));
             
             }
-        
-            // affichage de la map
+            // affichage de la carte
             else {
             
-                // gestion des bordures de la map
-                if (instanceMap.ptr_map[x][y] == CHAR_BORD) {
-                
-                    //DEVMODE
-                    if (consoleActive) {
-                    
-                        wattron(jeu, COLOR_PAIR(consoleActive));
-                        mvwprintw(jeu, jy, jx, "%c", instanceMap.ptr_map[x][y]);
-                        wattroff(jeu, COLOR_PAIR(consoleActive));
-                    
-                    }
-                    else {
-                        mvwprintw(jeu, jy, jx, "%c", CHAR_VIDE);
-                    }
-                
-                }
-                else {
-                    mvwprintw(jeu, jy, jx, "%c", instanceMap.ptr_map[x][y]);
-                }
+                couleur = definirCouleur(instanceMap, x, y); // on définit la couleur à utiliser
+            
+                wattron(jeu, COLOR_PAIR(couleur));
+                mvwaddch(jeu, jy, jx, instanceMap.ptr_map[x][y]);
+                wattroff(jeu, COLOR_PAIR(couleur));
             
             }
             
@@ -274,8 +410,12 @@ void affichageJeu(joueur j, map instanceMap) {
 /* Affiche le message de mort */
 void afficherMsgMort() {
 
+    ecrireTitre();
+
+    attron(COLOR_PAIR(rouge));
     mvprintw(LINES/2, (COLS/2)-8, "Vous etes mort !"); 
     mvprintw(LINES/2 + 1, (COLS/2)-17, "Appuyez sur Entree pour reessayer !");
+    attroff(COLOR_PAIR(rouge));
 
     return;
 
@@ -285,9 +425,13 @@ void afficherMsgMort() {
 /* Affiche le message de victoire */
 void afficherMsgVictoire() {
 
+    ecrireTitre();
+
+    attron(COLOR_PAIR(vert));
     mvprintw(LINES/2 - 1, (COLS/2)-13, "Bravo ! Vous avez gagne !"); 
     mvprintw(LINES/2, (COLS/2)-18, "Appuyez sur Entree pour recommencer"); 
     mvprintw(LINES/2 + 1, (COLS/2)-18, "Appuyez sur ECHAP pour quitter le jeu");
+    attroff(COLOR_PAIR(vert));
 
     return;
 
@@ -296,11 +440,6 @@ void afficherMsgVictoire() {
 
 /* Libère la mémoire de l'affichage */
 void libererMemoireAffichage() {
-
-    //DEVMODE
-    if (consoleActive) {
-        wattroff(titre, COLOR_PAIR(consoleActive)); // on arrete la couleur pour le titre
-    }
 
     wclear(titre);
     delwin(titre);

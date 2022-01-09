@@ -10,7 +10,7 @@ FILE* logFile; // fichier de log
 
 
 /* Ouvre le fichier de log */
-void initLogFile() {
+void initFichierLog() {
 
     logFile = fopen("./log.txt", "w");
 
@@ -33,7 +33,7 @@ void initLogFile() {
 
 
 /* ajoute un message au fichier de log */
-void newLog(char* message) {
+void nouveauLog(char* message) {
 
     if (logFile != NULL) {
         fprintf(logFile, "%d : %s \n", compteurFrame, message);
@@ -45,7 +45,7 @@ void newLog(char* message) {
 
 
 /* referme le fichier de log */
-void closeLogFile() {
+void fermerFichierLog() {
 
     if (logFile != NULL) {
         fclose(logFile);

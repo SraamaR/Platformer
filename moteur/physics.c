@@ -5,10 +5,10 @@
 
 
 const float g = 10;
-const float coefficientVitesse = 2.0; // définit la vitesse du mouvement (et donc par conséquent du jeu)
+const float coefficientVitesse = 2.0; // Définit la vitesse du mouvement (et donc par conséquent du jeu)
 
 
-/* retourne la position relative par rapport a l'instant précédent */
+/* Retourne la position relative par rapport a l'instant précédent */
 float valeurAcceleration(mouvement accel) {
 
     float t = (compteurFrame - accel.tempsModif) * ecartFrameMs / 1000 * coefficientVitesse;
@@ -27,6 +27,6 @@ float valeurAcceleration(mouvement accel) {
 /*  */
 float valeurVitesse(mouvement vitesse) {
 
-    return vitesse.valeur * ecartFrameMs / 1000 * coefficientVitesse; // pas besoin de soustraire, car c'est linéaire, tout les dt la position augmente de la même grandeur
+    return vitesse.valeur * ecartFrameMs / 1000 * coefficientVitesse; // Pas besoin de soustraire, car c'est linéaire, tout les dt la position augmente de la même grandeur
 
 }

@@ -6,6 +6,8 @@
 #include "joueur.h"
 #include "../map/map.h"
 
+extern bool mortJoueurActif;
+extern bool victoireJoueurActive;
 
 extern const int MOUV_X;
 extern const int MOUV_Y;
@@ -29,10 +31,10 @@ void mouvDroite(joueur* j);
 void mouvSaut(joueur* j);
 
 /* Gestion de la mort du joueur*/
-void mortJoueur(joueur *j);
+void mortJoueur(joueur *j, map instanceMap);
 
 /* Gestion de la victoire */
-void victoireJoueur(joueur *j);
+void victoireJoueur(joueur *j, map instanceMap);
 
 
 #endif

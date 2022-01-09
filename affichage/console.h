@@ -15,6 +15,7 @@ extern int nbLigneConsole;
 extern const int ERRMSG;
 extern const int WARNMSG;
 extern const int INFOMSG;
+extern const int CRASHMSG;
 
 /* Affiche un message dans la console */
 void afficherMessageConsole(char str[], int msgType);
@@ -22,8 +23,13 @@ void afficherMessageConsole(char str[], int msgType);
 /* Initialise la console */
 void initConsole();
 
+/* Initialise la fenêtre ncurses de la console */
+void initFenetreConsole();
+
 /* Libère la mémoire de la console */
 void libererMemoireConsole();
 
+/* Nettoie le contenu des messages de la console */
+void clearConsole();
 
 #endif

@@ -17,11 +17,12 @@
 
 
 bool enCours = true; // Cette variable est vraie tant que le jeu est en marche
+int x_fin;
 
-
-/* Fonction principale du jeu */
+/* Point d'entrée du programme */
 int main() {
 
+    // Initialise la bibliothèque Ncurses avec les paramètres que l'on souhaite
     initCurses();
     
     // Le menu est affiché jusqu'à que le joueur presse une touche
@@ -35,7 +36,7 @@ int main() {
     if(DEVMODE) {
     
         initConsole();
-        initLogFile();
+        initFichierLog();
     
     }
     initAffichageJeu();
@@ -50,7 +51,7 @@ int main() {
     // Initialise le joueur
     int spawn_x = 0;
     int spawn_y = 0;
-    int x_fin = posFin(instanceMap);
+    x_fin = posFin(instanceMap);
     posSpawnJoueur(&spawn_x, &spawn_y, instanceMap);
     defSpawn(spawn_x, spawn_y);
     joueur j = initJoueurSpawn();
@@ -58,12 +59,18 @@ int main() {
     // Transforme getch en appel non-bloquant
     nodelay(stdscr, true);
 
-    // Autorise l'utilisation des flèches
+    // Autorise l'utilisation des flèches du clavier
     keypad(stdscr, true);
 
     // Variable compteur (compte le temps nécessaire au calculs et à l'affichage)
     clock_t start, end;
 
+    /* Boucle principale du programme :
+    - Physique
+    - Affichage
+    - Detection victoire
+    - Limitation des FPS
+    */
     while (enCours) {
     
         start = clock(); // compteur de début
@@ -73,10 +80,10 @@ int main() {
         affichageJeu(j, instanceMap);
     
         // Envoi puis traitement de l'entrée utilisateur
-        inputControle(getch(), &enCours, &j);
+        inputControle(getch(), &enCours, &j, instanceMap);
     
         if (j.position.x >= x_fin) {
-            victoireJoueur(&j);
+            victoireJoueur(&j, instanceMap);
         }
     
         end = clock(); // compteur de fin
@@ -90,7 +97,7 @@ int main() {
     if(DEVMODE) {
     
         libererMemoireConsole();
-        closeLogFile();
+        fermerFichierLog();
     
     }
     libererMemoireAffichage();
@@ -102,7 +109,7 @@ int main() {
 }
 
 
-/* Arrete la boucle de jeu */
+/* Fonction à appeler pour mettre fin au programme */
 void arretJeu() {
 
     afficherMessageConsole("Arrêt du jeu...", INFOMSG);

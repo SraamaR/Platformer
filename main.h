@@ -3,6 +3,7 @@
 
 /* main : fichier principale du jeu */
 
+extern int x_fin;
 
 /* Arrete la boucle de jeu */
 void arretJeu();

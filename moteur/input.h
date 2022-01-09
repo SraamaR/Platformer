@@ -6,10 +6,11 @@
 #include <stdbool.h>
 
 #include "../gameplay/joueur.h"
+#include "../map/map.h"
 
 
 /* Permet d'effectuer des actions celon l'entree clavier utilisee */
-void inputControle(int entree, bool *enCours, joueur *j);
+void inputControle(int entree, bool *enCours, joueur *j, map instanceMap);
 
 
 #endif

@@ -15,7 +15,7 @@ const int NBRE_LIGNES_MAX_MAP = 255;
 const char CHAR_BORD  = '#';
 const char CHAR_SPAWN = '%';
 const char CHAR_VIDE  = ' ';
-const char CHAR_PLEIN = '*';
+const char CHAR_PLEIN = '.';
 const char CHAR_MUR = '|';
 const char CHAR_COIN = '+';
 const char CHAR_PLATFORME = '-';
@@ -41,7 +41,7 @@ char** initTableau(int x, int y) {
 
     if (ptr_map == NULL) {
     
-        afficherMessageConsole("Erreur d'allocation memoire", ERRMSG);
+        afficherMessageConsole("Erreur d'allocation memoire", CRASHMSG);
         return NULL;
     
     }
@@ -53,7 +53,7 @@ char** initTableau(int x, int y) {
     
         if (ptr_map[i] == NULL) {
         
-            afficherMessageConsole("Erreur d'allocation memoire colonne", ERRMSG);
+            afficherMessageConsole("Erreur d'allocation memoire colonne", CRASHMSG);
         
             map instanceMap;
             instanceMap.ptr_map = ptr_map;
@@ -172,13 +172,13 @@ bool verifFormat(FILE* fichierMap, map instanceMap) {
 
     if (nbreSpawn == 0) {
     
-        afficherMessageConsole("Aucun point d'apparition trouve", ERRMSG);
+        afficherMessageConsole("Aucun point d'apparition trouve", CRASHMSG);
         return false;
     
     } 
     else if (nbreSpawn > 1) {
     
-        afficherMessageConsole("Plusieurs points d'apparition trouves", ERRMSG);
+        afficherMessageConsole("Plusieurs points d'apparition trouves", CRASHMSG);
         return false;
     
     }
@@ -199,7 +199,7 @@ map chargementMap() {
     fichierMap = fopen("map/map.txt", "r");
     if (fichierMap == NULL) {
     
-        afficherMessageConsole("Le fichier map.txt n'existe pas ou sa lecture est impossible", ERRMSG);
+        afficherMessageConsole("Le fichier map.txt n'existe pas ou sa lecture est impossible", CRASHMSG);
         fclose(fichierMap);
         exit(1);
     
@@ -242,7 +242,7 @@ map chargementMap() {
 
     if (verifFormat(fichierMap, instanceMap) == false) {
     
-        afficherMessageConsole("Le format du fichier map.txt est invalide", ERRMSG);
+        afficherMessageConsole("Le format du fichier map.txt est invalide", CRASHMSG);
         fclose(fichierMap);
         exit(1);
     
@@ -287,10 +287,6 @@ void posSpawnJoueur(int* x, int* y, map instanceMap) {
             
                 *x = i;
                 *y = j;
-            
-                /* On remplace le charactère du point d'appartion par un vide
-                après avoir stocké ces coordonées */
-                instanceMap.ptr_map[i][j] = CHAR_VIDE;
                 return;
             
             }
@@ -312,11 +308,8 @@ int posFin(map instanceMap) {
     
         for (int j = 0; j < instanceMap.y; j++) {
         
-            if (instanceMap.ptr_map[i][j] == CHAR_FIN) { // On remplace le charactère de fin par un vide après avoir stocké ses coordonées
-            
-                instanceMap.ptr_map[i][j] = CHAR_VIDE;
+            if (instanceMap.ptr_map[i][j] == CHAR_FIN) {
                 return i;
-            
             }
         
         }

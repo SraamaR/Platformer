@@ -15,20 +15,29 @@
 %             Paramétrage               %
 %---------------------------------------%
 
-\lstdefinestyle{codeblock}{
-	language=C,
-	keywordstyle=\color{magenta},
-	basicstyle=\ttfamily \footnotesize,
-	identifierstyle=\color{blue},
-	%numbersep=5pt,
-	tabsize=2,
-	breaklines=true,
-	numbers=left,
-	numberstyle=\tiny,
-	captionpos=b,
-	frame=single
+\lstloadlanguages{C, Caml, Python, SQL}
+\lstdefinestyle{CustomCodeBlock}{
+    backgroundcolor = \color{gray!10!white},   
+    commentstyle = \color{OliveGreen},
+    identifierstyle=\color{Tan},
+    keywordstyle = \color{MidnightBlue},
+    numberstyle = \tiny \color{Gray},
+    stringstyle = \color{Orchid},
+    basicstyle = \ttfamily \footnotesize,
+    breakatwhitespace = false,         
+    breaklines = false,                 
+    captionpos = b,                    
+    keepspaces = false,                 
+    numbers = left,                    
+    numbersep = 5pt,                  
+    showspaces = false,                
+    showstringspaces = false,
+    showtabs = false,                  
+    tabsize = 3,
 }
-\lstset{style=codeblock}
+\lstset{style = CustomCodeBlock}
+
+
 
 \hypersetup{
 	colorlinks,
