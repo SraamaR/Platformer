@@ -86,7 +86,7 @@
 		\end{center}
 	
 		Platformer est un jeu de plateforme, où le but est d'arriver au bout d'une carte après de multiple obstacles.
-		Ce jeu se rapproche de Mario Bros.
+		Ce jeu se rapproche de Mario Bros ou de Geometrydash.
 	
 		Le jeu est programmé en \textbf{C} et s'utilise dans une console (similaire a MS-DOS).\\
 
@@ -194,26 +194,63 @@
 		\newpage
 		
 		\subsection{Affichage}
+
+		Dans un jeu vidéo, la caméra est un objet tout aussi important que le gameplay.
+		Elle montre une partie de l'environnement du jeu. \\
 		
-			L'affichage et une part importante d'un jeu, elle est la première interaction d'un joueur avec celui-ci.\\
-
-
-			Le problème c'est posé lorsqu'il a fallu afficher la carte en fonction de la position du joueur dans celle-ci.
-
-			En effet, Il est important qu'un joueur puisse voir suffisamment ce qui l'entoure afin d'avoir une bonne expérience de jeu.
-
-			Nous avons donc opté sur la mise en place d'une \textit{camera} via l'implémentation d'une structure.
-			\begin{lstlisting}[title=Structure Camera]
-typedef struct s_camera {
-	
-	int centrex;
-	int centrey;
-	int longueur;
-	int largeur;
-				
-} camera;
-			\end{lstlisting}
 		
+		Dans le cadre de Platformer, nous avons opté pour une caméra centrée sur le joueur qui offre une vision globale de ce qui entoure le joueur.
+		\begin{center}
+			\includegraphics[width = 0.80 \textwidth]{content/affichage1.png}
+		\end{center}
+		
+		Pour implémenter cette caméra, nous avons crée une structure caméra contenant :
+		\begin{itemize}
+			\item Des coordonnées centrales (x et y)
+			\item Une longueur et une largeur \\
+		\end{itemize}
+		
+		
+		Ainsi, on repère la caméra selon son centre.
+		\begin{center}
+			\includegraphics[width = 0.70 \textwidth]{content/affichage2.png}
+		\end{center}
+		
+		Une caméra centrée apporte cependant un problème lorsqu'on approche des bordures de la carte.
+		En effet, si le joueur est au bord de la carte, la caméra se devra d'afficher une partie de l'environnement qui n'existe pas. \\
+		
+		
+		Pour pallier a ce problème, il existe plusieurs solutions dont le plus connu était :
+		\begin{itemize}
+			\item De bloquer la caméra à une certaine position
+			\item D'afficher du vide
+			\item De créer des bordures de map plus larges \\
+		\end{itemize}
+		
+		
+		Pour Platformer, nous avons choisi la première option.
+		
+		Ainsi, à partir d'une certaine position du joueur dans la carte, la caméra se bloque.
+		Cette limite, que ne peut dépasser la caméra, est différente selon les deux axes x et y.
+		\begin{center}
+			\includegraphics[width = 0.90 \textwidth]{content/affichage3.png}
+		\end{center}
+		
+		Enfin, dans le cadre de Platformer, il faut prendre en compte un autre paramètre : la taille du terminal.
+		En effet, il faut pouvoir définir la taille de la caméra en prenant en compte la taille de la carte mais aussi celle du terminal :
+		Une carte plus petite que le terminal doit pouvoir être affichée en entière. \\
+		
+		
+		Pour cela, on définit la caméra de même taille que le terminal, mais lorsque la taille devient supérieure à celle de la carte,
+		alors on définit la caméra selon la taille de la carte. \\
+		
+		
+		Ainsi donc, nous avons placé la limite, précédemment vus, dynamiquement par rapport à la taille du terminal : 
+		Si le joueur se situe dans une partie de la carte dont la taille est inférieure à la moitié de la taille du terminal,
+		alors la caméra se bloque contre cette limite. \\
+		
+		
+		Tous ces choix nous ont permis d'avoir un affichage dynamique aussi bien par rapport à la taille du terminal que par rapport à la carte.
 		\newpage
 
 		\subsection{Collisions}
@@ -255,7 +292,7 @@ typedef struct s_camera {
 	\begin{itemize}
 		\item Un menu pour choisir différentes cartes
 		\item Des adversaires automatiques
-		\item Des couleurs
+		\item Des checkpoints
 		\item Éventuellement, un outil pour créer d'autres cartes (ou un guide)
 		\item \dots
 	\end{itemize}

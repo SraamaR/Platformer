@@ -248,7 +248,7 @@ void positionnerCamera(camera* cam, joueur* j, map* instanceMap) {
         cam->centrex = instanceMap->x-(cam->longueur/2);
     }
     else {
-        cam->centrex = j->position.x; // par défaut centré sur le joueur
+        cam->centrex = j->position.x; // par defaut centre sur le joueur
     }
     
     // axe y
@@ -333,7 +333,7 @@ void affichageJeu(joueur j, map instanceMap) {
     
         getmaxyx(jeu, jyMax, jxMax);
         werase(jeu);
-    
+
         afficherMessageConsole("Nouveau redimensionnement fenetre", INFOMSG);
     
     }
