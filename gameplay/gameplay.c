@@ -101,7 +101,7 @@ void nouveauX(joueur* j) {
 
     if (vx > 0) {
     
-        if (vx+ax > 0) { // Si la décélération + le mouvement crée par la vitesse va toujours dans le sens du mouvement, on continue
+        if (vx + ax > 0) { // Si la décélération + le mouvement crée par la vitesse va toujours dans le sens du mouvement, on continue
             j->positionPrecise.x += vx+ax;
         }
         else { // Sinon on arrête le mouvement
@@ -113,7 +113,7 @@ void nouveauX(joueur* j) {
     } 
     else if (vx < 0) {
     
-        if (vx+ax < 0) { // Si la décélération + le mouvement crée par la vitesse va toujours dans le sens du mouvement, on continue
+        if (vx + ax < 0) { // Si la décélération + le mouvement crée par la vitesse va toujours dans le sens du mouvement, on continue
             j->positionPrecise.x += vx+ax;
         }
         else { // Sinon on arrête le mouvement

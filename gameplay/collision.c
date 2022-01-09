@@ -30,7 +30,7 @@ void arreterMouvementX(joueur* j) {
 /* Arrete le mouvement en axe y */
 void arreterMouvementY(joueur* j, int type) {
 
-    if (type == LOW) {
+    if (type == LOW) { // cas où le joueur est au sol
     
         j->accelY.valeur = 0.0;
         j->accelY.tempsModif = compteurFrame;
@@ -38,7 +38,7 @@ void arreterMouvementY(joueur* j, int type) {
         j->vitesseY.valeur = 0.0;
     
     }
-    else {
+    else { // cas ou le joueur est en l'air
     
         j->accelY.valeur = -g;
         j->accelY.tempsModif = compteurFrame;
