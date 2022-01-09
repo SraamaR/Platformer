@@ -98,6 +98,7 @@
 			\item moteur : Gestion des calculs internes\\
 		\end{itemize}
 	
+	\newpage
 
 	\section{Problèmes rencontrés}
 
@@ -131,11 +132,15 @@
 		
 			Pour libérer la mémoire occupée par le tableau on libère d’abord la mémoire occupée par chaque colonne puis 
 			on libère la mémoire occupée par la première ligne.
+			
+		\newpage
 		
 	
 		\subsection{Physique et mouvement}
 		
-		Pour la partie liée au mouvement du joueur, l'utilisation d'équation horaire de physique à été la solution utilisée.
+		Le mouvement du joueur est modélisé grâce aux équations horaires du mouvement en physique
+		
+		\subsubsection{Sous-structures nécessaire pour l'implémentation}
 		
 		Cependant, pour il faut d'abord créer un moyen de compter le temps : le compter en secondes directement aurait été compliqué et peu précis, nous avons donc intégrer un compteur d'image qui est incrémenté à chaque passage dans la boucle principale.
 		
@@ -147,14 +152,35 @@
 		Un autre type, \textit{mouvement} est utilisé pour stocker les actions en cours sur le joueur. La solution retenue ici à été de créer une variable de mouvement pour la vitesse et l'accélération mais en décomposant le mouvement en \(x\) et \(y\). Cette structure mouvement contient une valeur flottante, mais également une horloge, qui indique l'image de départ du mouvement.
 		 
 		\medskip
-		On
+		On a créé alors la structure joueur contenant toutes les structures présentées ci-dessus. (\textit{cf. gameplay/joueur.c})
 		
-		\begin{lstlisting}[title=Test]
-typedef struct s_joueur {
-	coords position;
-	vecteur 
-} joueur;
-		\end{lstlisting}
+		\subsubsection{Calcul de l'écart entre deux positions}
+		
+		La position du joueur est calculée grâce aux valeurs de vitesse et d'accéleration sur chaque axe ainsi que leur image (\textit{frame}) de départ.
+		
+		Pour calculer la position du joueur à une image \(n + 1\), on prend la position du joueur à l'image \(n\) et on ajoute le petit déplacement \(dx\) (ou \(dy\) selon l'axe).
+		
+		On définit donc \(p_x(t)\) (position du joueur sur \(x\) en fonction du temps) comme :
+		\begin{align*}
+			p_x(t+1) &= p_x(t) + dx\\
+			p_x(t+1)&= p_x(t) + (a_x \times [(t+1)^2 - t^2] + v_x)
+		\end{align*}		
+	
+		Avec \(t\) le temps depuis le début du mouvement en question (\(t = \text{Image actuelle} - \text{tempsModification}\)).
+		
+		On calcule l'écart de position dû à l'accélération en faisant \((t+1)^2 - t^2\) car l'accélération est quadratique pour la position (on intègre deux fois une constante).
+		
+		Pour l'écart de la position dû à la vitesse, cette formule n'est pas nécessaire car la vitesse n'est intégré qu'une fois pour obtenir la position, donc est linéaire. Ainsi, à chaque incrémentation du temps, on ajoute la vitesse multipliée par \((t + 1) - t = 1\).
+		
+		De même pour le mouvement sur y.
+		
+		\subsubsection{Changement de la position du joueur}
+		
+		Une fois l'écart entre deux positions successives, on ajoute la valeur de cet écart (qui est un flottant) à la partie \textit{positionPrécise} de la structure du joueur. 
+		
+		Ensuite, comme pour l'affichage la position du joueur est interprété en entier, on utilise la fonction \(round\) qui arrondi la valeur à l'entier le plus proche.
+		
+		On stocke enfin cette valeur arrondie dans la partie \textit{position} de la structure joueur.
 		
 		\newpage
 		
