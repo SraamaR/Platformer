@@ -138,7 +138,11 @@
 	
 		\subsection{Physique et mouvement}
 		
-		Le mouvement du joueur est modélisé grâce aux équations horaires du mouvement en physique
+		Le mouvement du joueur est modélisé grâce aux équations horaires du mouvement en physique. On applique différentes forces : 
+		\begin{enumerate}
+			\item Le poids, qui s'applique sur l'axe \(y\)
+			\item Les frottements, uniquement sur l'axe des \(x\). Cependant il sont simplifié par une accélération constante dans le sens inverse du mouvement (ils ne sont pas liés à la vitesse du joueur).
+		\end{enumerate}
 		
 		\subsubsection{Sous-structures nécessaire pour l'implémentation}
 		
@@ -176,11 +180,16 @@
 		
 		\subsubsection{Changement de la position du joueur}
 		
-		Une fois l'écart entre deux positions successives, on ajoute la valeur de cet écart (qui est un flottant) à la partie \textit{positionPrécise} de la structure du joueur. 
+		Une fois l'écart entre deux positions successives, on ajoute la valeur de cet écart (qui est un flottant) à la partie \textit{positionPrécise} de la structure du joueur (pour la partie sur \(y\)).
+		
+		Pour l'axe des \(x\), étant donné le modèle constant des frottements, on est obligé de vérifier que ces frottements ne vont pas faire reculer le joueur : pour cela, on vérifie que la somme de l'accélération et de la vitesse sur \(x\) est du même signe que celle de la vitesse \(v_0\) (la direction où le joueur souhaite se déplacer). Si ce n'est pas le cas, on remet la valeur de la vitesse et de l'accélération à 0, et donc le mouvement s'arrête.
 		
 		Ensuite, comme pour l'affichage la position du joueur est interprété en entier, on utilise la fonction \(round\) qui arrondi la valeur à l'entier le plus proche.
 		
-		On stocke enfin cette valeur arrondie dans la partie \textit{position} de la structure joueur.
+		Pour finir, on stocke cette valeur arrondie dans la partie \textit{position} de la structure joueur.
+		
+		\medskip
+		De plus, on stocke la valeur de l'évolution de la position entre \(t\) et \(t+1\) dans la variable \textit{deltaPosition}, qui va nous servir pour les collisions : pour la calculer, on stocke la valeur de la position du départ multipliée par -1, on fait les actions de mise à jour de la position, puis on ajoute la nouvelle valeur de la position.
 		
 		\newpage
 		
@@ -204,11 +213,41 @@ typedef struct s_camera {
 				
 } camera;
 			\end{lstlisting}
+		
+		\newpage
 
 		\subsection{Collisions}
 		
+		Les collisions ont également été un point à la fois déterminant et complexe pour rendre le jeu fonctionnel. En effet, une partie de la complexité vient du fait que lorsque le personnage se tient près d'un mur, il doit ne plus pouvoir bouger s'il va dans la direction du mur, mais doit quand même pouvoir s'en éloigner.
+		
+		Ici encore, comme dans la physique, on a séparé les collisions sur \(x\) et \(y\), qui a un inconvénient, de mal pouvoir détecter les collisions en diagonales, mais qui reste quand même très rare à obtenir.
+		
+		La détection des collisions se fait de manière ordonnée (similaire pour l'axe \(x\) et \(y\)):
+		\begin{enumerate}
+			\item Dans un premier temps, on cherche dans quel sens va le joueur. On crée une variable \textit{sens} qui stocke ce sens. On se sert de la variable \textit{deltaPosition} pour le déterminer (cette variable est évoquée dans la partie "physique"). La variable sens peut prendre 3 valeurs : 
+			\begin{itemize}
+				\item -1 si le joueur va vers le bas sur \(Y\) (ou vers la gauche sur \(X\))
+				\item 0 si le joueur est immobile sur l'axe en question
+				\item 1 si le joueur va vers le haut sur \(Y\) (ou vers la droite sur \(X\))
+			\end{itemize} 
+			\item On vérifie que le joueur n'est pas en bord de carte (mais en incluant le sens sinon le joueur resterait collé à une paroi\dots invisible).
+			\item Enfin, on stocke les caractères à droite et à gauche du joueur (qui ne peuvent pas dépasser les limites de la carte, car l'étape d'au dessus enlève ces cas particuliers).
+			\item On vérifie ensuite qu'il n'y a rien dans la direction ou va le joueur. S'il n'y a rien, on renvoie \textit{false}, pour signaler qu'il n'y a aucune collision.
+			Sinon, on sépare trois cas :
+			\begin{itemize}
+				\item Le premier, sur l'axe des \(X\) : ici, on enlève la vitesse sur \(X\) en mettant la valeur à 0 et on fait de même pour l'accélération
+				\item Pour les \(Y\), si l'on touche quelque chose vers le bas : on fait pareil que sur les \(X\).
+				\item Si le joueur touche quelque chose sur le haut, on remet la valeur de la vitesse à 0, met on celle de l'accélération à \(-g\) : le joueur est supposé dans le vide, donc subit toujours l'attraction "terrestre". Ce cas est le même dans le cas où le sens est nul (c'est à dire que le joueur est immobile sur les \(X\)) et qu'il n'y a rien en-dessous du joueur.
+			\end{itemize}
+		\end{enumerate}
+	
+		Une fois ces étapes exécutées, on obtient \textit{true} ou  \textit{false} selon si il y a collision ou non. S'il y a collision, alors la position du joueur n'est pas mise à jour (le joueur reste donc immobile).
+		
+		La vérification de la mort du joueur est également faite ici : puisqu'il n'y a pas d'ennemi, la seule façon de perdre est de tomber dans un trou ou de rentrer dans un pic. Pour vérifier, on regarde juste le caractère qui est après le joueur dans la direction où il va : si c'est un pic, on déclenche l'arrêt du jeu ; sinon on continue.
 		
 		
+		
+	\newpage
 
 	\section{Conclusion}
 
