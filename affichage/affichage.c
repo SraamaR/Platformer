@@ -132,7 +132,7 @@ void ecrireTitre() {
 
     getmaxyx(titre, tyMax, txMax);
 
-    // changement couleur vordure celon menu du jeu
+    // changement couleur bordure celon menu du jeu
     if (mortJoueurActif) {
     
         wattron(titre, COLOR_PAIR(rouge));
@@ -220,11 +220,9 @@ void redimensionnerFenetre() {
         werase(console);
         delwin(console);
         initFenetreConsole();
-
         wrefresh(console);
     
         wresize(jeu, nbLigneTerminal-tyMax-nbLigneConsole, nbColonneTerminal);
-        box(titre, ACS_VLINE, ACS_HLINE);
     
     }
     else {
@@ -335,7 +333,7 @@ void affichageJeu(joueur j, map instanceMap) {
     
         getmaxyx(jeu, jyMax, jxMax);
         werase(jeu);
-
+    
         afficherMessageConsole("Nouveau redimensionnement fenetre", INFOMSG);
     
     }

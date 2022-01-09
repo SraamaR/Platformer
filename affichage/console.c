@@ -7,7 +7,7 @@
 #include "../moteur/logger.h"
 
 bool consoleActive = false;
-WINDOW *console;
+WINDOW* console;
 
 int nbLigneConsole = 0;  // Nombre de ligne console
 int ligneDernierMsg = 0; // Ligne du dernier message
@@ -19,8 +19,7 @@ const int CRASHMSG = 53;
 
 const int LONGUEUR_MAX_MSG = 256;
 
-typedef struct messageConsole
-{
+typedef struct messageConsole {
 
     int timeFrame;
     int messageType;
@@ -32,28 +31,29 @@ messageConsole messageList[5]; // on stocke les messages (5 lignes max)
 
 
 /* Initialise la fenêtre ncurses de la console */
-void initFenetreConsole(){
+void initFenetreConsole() {
 
     nbLigneConsole = LINES / 6;
 
-    if (nbLigneConsole > 5)
-    {
+    if (nbLigneConsole > 5) {
         nbLigneConsole = 5; // on limite la taille de la console a 5 messages (peut être moins si l'écran est petit)
     }
 
     console = subwin(stdscr, nbLigneConsole, COLS, 3, 0);
-
     ligneDernierMsg = 0;
+
+    return;
 
 }
 
 /* Initialise la console */
-void initConsole(){
+void initConsole() {
 
-    for (int i = 0; i < 5; i++)
-    {
+    for (int i = 0; i < 5; i++) {
+    
         messageList[i].msg = malloc(LONGUEUR_MAX_MSG * sizeof(char)); // on prepare des strings du nombre de caractère que peut contenir l'écran
         messageList[i].msg[0] = '\0';
+    
     }
 
     init_pair(INFOMSG, COLOR_CYAN, COLOR_BLACK);
@@ -73,51 +73,45 @@ Préconditions :
 - La chaîne de charactères termine par la sentinelle 
 - Longueur du message (sentinelle incluse) <= LONGUEUR_MAX_CONSOLE
 */
-void afficherMessageConsole(char *str, int msgType){
+void afficherMessageConsole(char *str, int msgType) {
 
     // Affichage des messages de crash
-    if (msgType == CRASHMSG){
-
+    if (msgType == CRASHMSG) {
+    
         clear();
-
+    
         printw(str);
         printw("\n");
-
+    
         refresh();
-
+    
         return;
-
+    
     }
 
-    if(!consoleActive){
-
+    if (!consoleActive) {
         return;
-
     }
 
     // Calcule la longueur du message pour éviter un dépassement de tableau
     if(strlen(str) >= LONGUEUR_MAX_MSG) {
-
         afficherMessageConsole("Message trop long", WARNMSG);
-
     }
 
     // Si on a atteint le max de la console, on décale d'un rang les messages
-    if (ligneDernierMsg == nbLigneConsole){
-
-        for (int i = 0; i < nbLigneConsole - 1; i++)
-        {
-
+    if (ligneDernierMsg == nbLigneConsole) {
+    
+        for (int i = 0; i < nbLigneConsole - 1; i++) {
+        
             messageList[i].messageType = messageList[i + 1].messageType;
             messageList[i].timeFrame = messageList[i + 1].timeFrame;
             strncpy(messageList[i].msg, messageList[i + 1].msg, LONGUEUR_MAX_MSG * sizeof(char));
-
+        
         }
         
-    } else if (ligneDernierMsg < nbLigneConsole){
-
+    }
+    else if (ligneDernierMsg < nbLigneConsole) {
         ligneDernierMsg++;
-
     }
 
     // Ajoute le message dans le log
@@ -130,18 +124,17 @@ void afficherMessageConsole(char *str, int msgType){
     // On nettoie la fenêtre
     werase(console);
 
-    for (int i = 0; i < nbLigneConsole; i++)
-    {
-
-        if(messageList[i].msg[0] != '\0'){
-
+    for (int i = 0; i < nbLigneConsole; i++) {
+    
+        if(messageList[i].msg[0] != '\0') {
+        
             wattron(console, COLOR_PAIR(messageList[i].messageType));
             wprintw(console, "%d : %s", messageList[i].timeFrame, messageList[i].msg);
             wprintw(console, "\n");
             wattroff(console, COLOR_PAIR(messageList[i].messageType));
-
+        
         }
-
+    
     }
 
     wrefresh(console);
@@ -150,11 +143,10 @@ void afficherMessageConsole(char *str, int msgType){
 }
 
 /* Libère la mémoire de la console */
-void libererMemoireConsole(){
+void libererMemoireConsole() {
 
     delwin(console);
-    for (int i = 0; i < 5; i++)
-    {
+    for (int i = 0; i < 5; i++) {
         free(messageList[i].msg);
     }
 

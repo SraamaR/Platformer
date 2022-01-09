@@ -57,7 +57,7 @@ void ajouterVitesse(joueur* j, float valeur, int type) {
             j->vitesseY.valeur = 0;
         }
 
-        // oO limite la vitesse, si supérieure on la met au max
+        // on limite la vitesse, si supérieure on la met au max
         if (j->vitesseY.valeur > VY_MAX) {
             j->vitesseY.valeur = VY_MAX;
         }
@@ -73,7 +73,7 @@ void ajouterVitesse(joueur* j, float valeur, int type) {
 }
 
 
-/*  */
+/* Ajoute de l'acceleration au joueur */
 void ajouterAcceleration(joueur* j, float valeur, int type) {
 
     if (type == MOUV_X) {
