@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -g
 LIBS=-lm -lncurses
-BUILDDIR=build
+BUILDDIR=build/.
 
 SOURCES := $(shell find ./ -name '*.c')
 OBJECTS := $(addprefix $(BUILDDIR),$(SOURCES:.%.c=%.o))
